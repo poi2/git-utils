@@ -7,6 +7,7 @@ Git utilities for managing repositories and branches interactively.
 - **git-branch-switch**: Interactive branch switcher with inquire
 - **git-branch-delete**: Safe branch deletion with merge status checking
 - **git-repo**: Repository management (clone, list) with organized directory structure
+- **git-pr-merged**: List merged pull requests for release notes
 - **git-utils**: Setup and configuration tool
 
 ## Installation
@@ -17,6 +18,7 @@ Git utilities for managing repositories and branches interactively.
 cargo install --path crates/git-branch-switch
 cargo install --path crates/git-branch-delete
 cargo install --path crates/git-repo
+cargo install --path crates/git-pr-merged
 cargo install --path crates/git-utils
 ```
 
@@ -57,6 +59,7 @@ Or manually add:
     bs = !git-branch-switch
     bd = !git-branch-delete
     repo = !git-repo
+    pr-merged = !git-pr-merged
 ```
 
 ## Usage
@@ -108,6 +111,28 @@ git repo ls --dirty
 
 # Switch between repositories (shell function)
 grs
+```
+
+### Pull request listing
+
+```bash
+# List PRs merged since latest tag
+git pr-merged
+
+# List PRs in specific range
+git pr-merged v1.0.0..v1.1.0
+
+# List PRs from last 10 commits
+git pr-merged -n 10
+
+# Output as JSON
+git pr-merged --format json
+
+# Output as Markdown (for release notes)
+git pr-merged v1.0.0..HEAD --format markdown > CHANGELOG.md
+
+# Open PRs in browser
+git pr-merged v1.0.0..HEAD --web
 ```
 
 ## Development
