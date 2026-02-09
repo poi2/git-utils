@@ -4,6 +4,7 @@ members = [
     "crates/git-branch-switch",
     "crates/git-branch-delete",
     "crates/git-repo",
+    "crates/git-pr-merged",
     "crates/git-utils",
 ]
 resolver = "2"
@@ -33,6 +34,7 @@ serde_json = "1.0"
 shellexpand = "3.1"
 url = "2.5"
 dirs = "5.0"
+regex = "1.11"
 
 # Internal dependencies
 git-utils-core = { path = "crates/git-utils-core" }

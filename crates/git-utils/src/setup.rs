@@ -69,6 +69,7 @@ const GITCONFIG_TEMPLATE: &str = r#"# git-utils recommended settings
     bs = !git-branch-switch
     bd = !git-branch-delete
     repo = !git-repo
+    pr-merged = !git-pr-merged
 "#;
 
 impl Setup {
