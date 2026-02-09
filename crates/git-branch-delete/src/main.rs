@@ -22,10 +22,6 @@ struct Cli {
     /// Force delete (use -D instead of -d)
     #[arg(short, long, conflicts_with = "merged")]
     force: bool,
-
-    /// Delete remote tracking branches as well
-    #[arg(short, long)]
-    remote: bool,
 }
 
 fn main() -> Result<()> {
@@ -44,8 +40,8 @@ fn main() -> Result<()> {
     // Remove current and base branches
     branches.retain(|b| b != &current_branch && b != &base_branch);
 
-    // Filter by merge status (default is merged)
-    if !cli.all {
+    // Filter by merge status (default is merged unless --force)
+    if !cli.all && !cli.force {
         branches.retain(|b| git::is_branch_merged(&repo, b, &base_branch).unwrap_or_default());
     }
 
