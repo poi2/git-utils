@@ -13,7 +13,7 @@ struct Cli {
     revision_range: Option<String>,
 
     /// Number of commits to check (alternative to revision range)
-    #[arg(short, long, conflicts_with = "revision_range")]
+    #[arg(short = 'n', long, conflicts_with = "revision_range")]
     count: Option<usize>,
 
     /// Open PR list in web browser
@@ -200,32 +200,61 @@ fn extract_pr_numbers(repo: &Repository, range: &str) -> Result<Vec<u32>> {
 }
 
 fn fetch_pr_details(repo_info: &str, pr_numbers: &[u32]) -> Result<Vec<PullRequest>> {
+    if pr_numbers.is_empty() {
+        return Ok(Vec::new());
+    }
+
+    // Build search query for all PR numbers
+    let search_query = pr_numbers
+        .iter()
+        .map(|n| n.to_string())
+        .collect::<Vec<_>>()
+        .join(" ");
+
+    let output = Command::new("gh")
+        .args([
+            "pr",
+            "list",
+            "--repo",
+            repo_info,
+            "--search",
+            &search_query,
+            "--state",
+            "merged",
+            "--json",
+            "number,title,url,mergedAt,author",
+            "--limit",
+            "1000",
+        ])
+        .output()
+        .context("Failed to run gh command")?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(anyhow!("Failed to fetch PR details: {}", stderr));
+    }
+
+    let prs: Vec<serde_json::Value> =
+        serde_json::from_slice(&output.stdout).context("Failed to parse gh output")?;
+
     let mut pulls = Vec::new();
-
-    for &number in pr_numbers {
-        let output = Command::new("gh")
-            .args([
-                "pr",
-                "view",
-                &number.to_string(),
-                "--repo",
-                repo_info,
-                "--json",
-                "number,title,url,mergedAt,author",
-            ])
-            .output()
-            .context("Failed to run gh command")?;
-
-        if output.status.success() {
-            let pr: serde_json::Value = serde_json::from_slice(&output.stdout)?;
-
+    for pr in prs {
+        if let Some(number) = pr["number"].as_u64() {
             pulls.push(PullRequest {
-                number,
+                number: number as u32,
                 title: pr["title"].as_str().unwrap_or("").to_string(),
                 url: pr["url"].as_str().unwrap_or("").to_string(),
                 merged_at: pr["mergedAt"].as_str().map(|s| s.to_string()),
                 author: pr["author"]["login"].as_str().map(|s| s.to_string()),
             });
+        }
+    }
+
+    // Warn about missing PRs
+    let fetched_numbers: std::collections::HashSet<u32> = pulls.iter().map(|p| p.number).collect();
+    for &num in pr_numbers {
+        if !fetched_numbers.contains(&num) {
+            eprintln!("Warning: PR #{} not found or not merged", num);
         }
     }
 
@@ -267,21 +296,24 @@ fn open_in_browser(repo_info: &str, pr_numbers: &[u32]) -> Result<()> {
     let base_url = format!("https://github.com/{}/pulls", repo_info);
     let query = pr_numbers
         .iter()
-        .map(|n| n.to_string())
+        .map(|n| format!("#{}", n))
         .collect::<Vec<_>>()
-        .join("+");
+        .join(" ");
     let url = format!("{}?q=is:pr+is:merged+{}", base_url, query);
 
-    // Use gh to open browser
+    // Use gh browse to open the URL
     let output = Command::new("gh")
-        .args(["pr", "list", "--web", "--repo", repo_info])
+        .args(["browse", "--repo", repo_info, &url])
         .output()
         .context("Failed to open browser")?;
 
     if !output.status.success() {
-        return Err(anyhow!("Failed to open browser"));
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        eprintln!("Warning: Failed to open browser: {}", stderr);
+        println!("URL: {}", url);
+    } else {
+        println!("Opened in browser: {}", url);
     }
 
-    println!("Opened in browser: {}", url);
     Ok(())
 }
