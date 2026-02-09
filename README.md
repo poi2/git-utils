@@ -156,23 +156,66 @@ git pr-merged v1.0.0..HEAD --web
 
 ## Development
 
+### Prerequisites
+
+Install cargo-make for task automation:
+
+```bash
+cargo install cargo-make
+```
+
 ### Build
 
 ```bash
 cargo build
 ```
 
-### Test
+### Test and Quality Checks
+
+We use cargo-make for running tests and quality checks:
 
 ```bash
-cargo test
+# Run all tests
+cargo make test
+
+# Check code formatting
+cargo make fmt
+
+# Fix code formatting
+cargo make fmt-fix
+
+# Run clippy linter
+cargo make clippy
+
+# Run all checks (format, clippy, test)
+cargo make check-all
 ```
 
-### Format and lint
+### Git Hooks
+
+Install git hooks to automatically run checks before commit and push:
 
 ```bash
-cargo fmt
-cargo clippy
+cargo make install-hooks
+```
+
+This installs:
+- **pre-commit hook**: Runs `cargo make check-all` before each commit
+- **pre-push hook**: Runs `cargo make check-all` before each push
+
+The hooks ensure code quality by running format checks, clippy, and tests automatically. If checks fail, the commit/push will be blocked.
+
+To uninstall hooks:
+
+```bash
+cargo make uninstall-hooks
+```
+
+To bypass hooks (not recommended):
+
+```bash
+git commit --no-verify
+git push --no-verify
 ```
 
 ## License
