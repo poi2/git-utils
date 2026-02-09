@@ -3,15 +3,28 @@ use git2::Config;
 use std::path::PathBuf;
 use url::Url;
 
-/// Get the repository root from git config
+/// Get the repository root from git config or environment variable
 pub fn get_repo_root() -> Result<PathBuf> {
-    let config = Config::open_default()?;
-    let root = config.get_string("git-repo.root").map_err(|_| {
-        anyhow!("git-repo.root not configured. Run 'git config --global git-repo.root <path>'")
-    })?;
+    // Try git config first
+    if let Ok(config) = Config::open_default() {
+        if let Ok(root) = config.get_string("git-repo.root") {
+            let expanded = shellexpand::tilde(&root);
+            return Ok(PathBuf::from(expanded.as_ref()));
+        }
+    }
 
-    let expanded = shellexpand::tilde(&root);
-    Ok(PathBuf::from(expanded.as_ref()))
+    // Fall back to GIT_REPO_ROOT environment variable
+    if let Ok(root) = std::env::var("GIT_REPO_ROOT") {
+        let expanded = shellexpand::tilde(&root);
+        return Ok(PathBuf::from(expanded.as_ref()));
+    }
+
+    Err(anyhow!(
+        "Repository root not configured.\n\
+         Set either:\n\
+         - git config --global git-repo.root <path>\n\
+         - export GIT_REPO_ROOT=<path> (in your shell rc file)"
+    ))
 }
 
 /// Check if SSH is preferred from git config
