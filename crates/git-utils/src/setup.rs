@@ -103,13 +103,50 @@ impl Setup {
         // Write env files
         let env_sh = git_utils_dir.join("env.sh");
         let env_fish = git_utils_dir.join("env.fish");
+        let env_sh_example = git_utils_dir.join("env.sh.example");
+        let env_fish_example = git_utils_dir.join("env.fish.example");
 
-        fs::write(&env_sh, ENV_SH_TEMPLATE)?;
-        fs::write(&env_fish, ENV_FISH_TEMPLATE)?;
+        // Always write templates to .example files
+        fs::write(&env_sh_example, ENV_SH_TEMPLATE)?;
+        fs::write(&env_fish_example, ENV_FISH_TEMPLATE)?;
 
-        println!("Created environment files:");
-        println!("  {}", env_sh.display());
-        println!("  {}", env_fish.display());
+        println!("Updated template files:");
+        println!("  {}", env_sh_example.display());
+        println!("  {}", env_fish_example.display());
+
+        // Only create actual env files on first install
+        let mut created_files = Vec::new();
+        let mut existing_files = Vec::new();
+
+        if !env_sh.exists() {
+            fs::write(&env_sh, ENV_SH_TEMPLATE)?;
+            created_files.push(env_sh.display().to_string());
+        } else {
+            existing_files.push(env_sh.display().to_string());
+        }
+
+        if !env_fish.exists() {
+            fs::write(&env_fish, ENV_FISH_TEMPLATE)?;
+            created_files.push(env_fish.display().to_string());
+        } else {
+            existing_files.push(env_fish.display().to_string());
+        }
+
+        if !created_files.is_empty() {
+            println!("\nCreated environment files:");
+            for file in &created_files {
+                println!("  {}", file);
+            }
+        }
+
+        if !existing_files.is_empty() {
+            println!("\nExisting files preserved (not overwritten):");
+            for file in &existing_files {
+                println!("  {}", file);
+            }
+            println!("\nTo update your env files with new templates, compare with .example files:");
+            println!("  diff ~/.git-utils/env.sh ~/.git-utils/env.sh.example");
+        }
 
         // Detect shell and add source line
         let shell = if let Some(s) = &self.shell {
