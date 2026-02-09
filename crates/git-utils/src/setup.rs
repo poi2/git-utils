@@ -115,37 +115,46 @@ impl Setup {
         println!("  {}", env_fish_example.display());
 
         // Only create actual env files on first install
-        let mut created_files = Vec::new();
-        let mut existing_files = Vec::new();
+        let mut created_files: Vec<PathBuf> = Vec::new();
+        let mut existing_files: Vec<PathBuf> = Vec::new();
 
         if !env_sh.exists() {
             fs::write(&env_sh, ENV_SH_TEMPLATE)?;
-            created_files.push(env_sh.display().to_string());
+            created_files.push(env_sh.clone());
         } else {
-            existing_files.push(env_sh.display().to_string());
+            existing_files.push(env_sh.clone());
         }
 
         if !env_fish.exists() {
             fs::write(&env_fish, ENV_FISH_TEMPLATE)?;
-            created_files.push(env_fish.display().to_string());
+            created_files.push(env_fish.clone());
         } else {
-            existing_files.push(env_fish.display().to_string());
+            existing_files.push(env_fish.clone());
         }
 
         if !created_files.is_empty() {
             println!("\nCreated environment files:");
             for file in &created_files {
-                println!("  {}", file);
+                println!("  {}", file.display());
             }
         }
 
         if !existing_files.is_empty() {
             println!("\nExisting files preserved (not overwritten):");
             for file in &existing_files {
-                println!("  {}", file);
+                println!("  {}", file.display());
             }
             println!("\nTo update your env files with new templates, compare with .example files:");
-            println!("  diff ~/.git-utils/env.sh ~/.git-utils/env.sh.example");
+            println!(
+                "  git diff --no-index {} {}",
+                env_sh.display(),
+                env_sh_example.display()
+            );
+            println!(
+                "  git diff --no-index {} {}",
+                env_fish.display(),
+                env_fish_example.display()
+            );
         }
 
         // Detect shell and add source line
