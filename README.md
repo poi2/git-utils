@@ -158,10 +158,11 @@ git pr-merged v1.0.0..HEAD --web
 
 ### Prerequisites
 
-Install cargo-make for task automation:
+Install cargo-make for task automation and ensure the required Rust components are installed:
 
 ```bash
 cargo install cargo-make
+rustup component add rustfmt clippy
 ```
 
 ### Build
@@ -204,6 +205,8 @@ This installs:
 - **pre-push hook**: Runs `cargo make check-all` before each push
 
 The hooks ensure code quality by running format checks, clippy, and tests automatically. If checks fail, the commit/push will be blocked.
+
+**Note**: Git hooks require `/bin/bash`. On Windows, ensure you have Git Bash installed (included with Git for Windows).
 
 To uninstall hooks:
 

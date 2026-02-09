@@ -35,7 +35,8 @@ script = '''
 #!/bin/bash
 set -e
 
-HOOKS_DIR=".git/hooks"
+HOOKS_DIR="$(git rev-parse --git-path hooks)"
+mkdir -p "$HOOKS_DIR"
 
 # Create pre-commit hook
 cat > "$HOOKS_DIR/pre-commit" << 'EOF'
@@ -44,6 +45,8 @@ cat > "$HOOKS_DIR/pre-commit" << 'EOF'
 # Runs cargo make check-all before allowing commit
 
 echo "Running pre-commit checks..."
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
 cargo make check-all
 
 if [ $? -ne 0 ]; then
@@ -69,6 +72,8 @@ cat > "$HOOKS_DIR/pre-push" << 'EOF'
 # Runs cargo make check-all before allowing push
 
 echo "Running pre-push checks..."
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
 cargo make check-all
 
 if [ $? -ne 0 ]; then
@@ -98,10 +103,13 @@ echo "To bypass hooks: git commit/push --no-verify"
 description = "Uninstall git hooks"
 script = '''
 #!/bin/bash
-HOOKS_DIR=".git/hooks"
+HOOKS_DIR="$(git rev-parse --git-path hooks)"
 
-rm -f "$HOOKS_DIR/pre-commit"
-rm -f "$HOOKS_DIR/pre-push"
-
-echo "✅ Git hooks uninstalled"
+if [ -d "$HOOKS_DIR" ]; then
+    rm -f "$HOOKS_DIR/pre-commit"
+    rm -f "$HOOKS_DIR/pre-push"
+    echo "✅ Git hooks uninstalled"
+else
+    echo "⚠️  Hooks directory not found"
+fi
 '''
