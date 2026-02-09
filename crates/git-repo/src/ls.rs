@@ -16,7 +16,7 @@ struct RepoEntry {
     status: Option<String>,
 }
 
-pub fn list_repos(long: bool, absolute: bool, _tree: bool, dirty: bool, json: bool) -> Result<()> {
+pub fn list_repos(long: bool, absolute: bool, dirty: bool, json: bool) -> Result<()> {
     let repo_root = get_repo_root()?;
 
     if !repo_root.exists() {

@@ -21,10 +21,6 @@ struct Cli {
     /// Show only unmerged branches
     #[arg(long)]
     no_merged: bool,
-
-    /// Show remote branches as well
-    #[arg(short, long)]
-    all: bool,
 }
 
 fn main() -> Result<()> {

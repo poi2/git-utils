@@ -46,10 +46,6 @@ enum Commands {
         #[arg(short, long)]
         absolute: bool,
 
-        /// Show as tree
-        #[arg(long)]
-        tree: bool,
-
         /// Show only dirty repositories
         #[arg(long)]
         dirty: bool,
@@ -75,11 +71,10 @@ fn main() -> Result<()> {
         Commands::Ls {
             long,
             absolute,
-            tree,
             dirty,
             json,
         } => {
-            list_repos(long, absolute, tree, dirty, json)?;
+            list_repos(long, absolute, dirty, json)?;
         }
     }
 
