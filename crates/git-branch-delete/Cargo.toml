@@ -1,0 +1,17 @@
+[package]
+name = "git-branch-delete"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "git-branch-delete"
+path = "src/main.rs"
+
+[dependencies]
+git-utils-core = { workspace = true }
+clap = { workspace = true }
+inquire = { workspace = true }
+anyhow = { workspace = true }

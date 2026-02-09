@@ -1,0 +1,21 @@
+[package]
+name = "git-repo"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "git-repo"
+path = "src/main.rs"
+
+[dependencies]
+git-utils-core = { workspace = true }
+clap = { workspace = true }
+anyhow = { workspace = true }
+git2 = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+url = { workspace = true }
+shellexpand = { workspace = true }

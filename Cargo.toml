@@ -1,0 +1,38 @@
+[workspace]
+members = [
+    "crates/git-utils-core",
+    "crates/git-branch-switch",
+    "crates/git-branch-delete",
+    "crates/git-repo",
+    "crates/git-utils",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["poi2"]
+license = "MIT"
+repository = "https://github.com/poi2/git-utils"
+
+[workspace.dependencies]
+# CLI
+clap = { version = "4.5", features = ["derive"] }
+inquire = "0.7"
+
+# Git
+git2 = "0.19"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Utilities
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+shellexpand = "3.1"
+url = "2.5"
+dirs = "5.0"
+
+# Internal dependencies
+git-utils-core = { path = "crates/git-utils-core" }
