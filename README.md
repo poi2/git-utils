@@ -34,8 +34,27 @@ This will:
 - Create `~/.git-utils/env.sh` and `~/.git-utils/env.fish`
 - Add source lines to your shell rc file
 - Set up the `grs` (git repository switch) shell function
+- Export `GIT_REPO_ROOT` environment variable (default: `~/src`)
+
+**Note**: `git-repo` commands will work immediately after setup using the `GIT_REPO_ROOT` environment variable. You can optionally configure `git-repo.root` in your `.gitconfig` for more control.
 
 ## Configuration
+
+### Repository root
+
+`git-repo` uses the following priority to determine the repository root:
+1. Git config: `git-repo.root`
+2. Environment variable: `GIT_REPO_ROOT` (set by `git-utils setup`)
+
+Choose one of:
+
+```bash
+# Option 1: Use environment variable (automatic after setup)
+# Already set by git-utils setup in ~/.git-utils/env.sh
+
+# Option 2: Use git config (optional, overrides environment variable)
+git config --global git-repo.root ~/src
+```
 
 ### Git config
 
