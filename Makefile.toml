@@ -1,0 +1,115 @@
+[config]
+default_to_workspace = false
+
+[tasks.test]
+description = "Run all tests"
+command = "cargo"
+args = ["test", "--all-features"]
+
+[tasks.fmt]
+description = "Check code formatting"
+command = "cargo"
+args = ["fmt", "--all", "--", "--check"]
+
+[tasks.fmt-fix]
+description = "Fix code formatting"
+command = "cargo"
+args = ["fmt", "--all"]
+
+[tasks.clippy]
+description = "Run clippy linter"
+command = "cargo"
+args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings"]
+
+[tasks.check-all]
+description = "Run all checks (format, clippy, test)"
+dependencies = ["fmt", "clippy", "test"]
+
+[tasks.ci]
+description = "Run CI checks (same as check-all)"
+alias = "check-all"
+
+[tasks.install-hooks]
+description = "Install git hooks"
+script = '''
+#!/bin/bash
+set -e
+
+HOOKS_DIR="$(git rev-parse --git-path hooks)"
+mkdir -p "$HOOKS_DIR"
+
+# Create pre-commit hook
+cat > "$HOOKS_DIR/pre-commit" << 'EOF'
+#!/bin/bash
+# Pre-commit hook for git-utils
+# Runs cargo make check-all before allowing commit
+
+echo "Running pre-commit checks..."
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+cargo make check-all
+
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌ Pre-commit checks failed!"
+    echo "Please fix the errors above before committing."
+    echo ""
+    echo "To bypass this hook (not recommended), use:"
+    echo "  git commit --no-verify"
+    exit 1
+fi
+
+echo "✅ Pre-commit checks passed!"
+EOF
+
+chmod +x "$HOOKS_DIR/pre-commit"
+echo "✅ Installed pre-commit hook"
+
+# Create pre-push hook
+cat > "$HOOKS_DIR/pre-push" << 'EOF'
+#!/bin/bash
+# Pre-push hook for git-utils
+# Runs cargo make check-all before allowing push
+
+echo "Running pre-push checks..."
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+cargo make check-all
+
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌ Pre-push checks failed!"
+    echo "Please fix the errors above before pushing."
+    echo ""
+    echo "To bypass this hook (not recommended), use:"
+    echo "  git push --no-verify"
+    exit 1
+fi
+
+echo "✅ Pre-push checks passed!"
+EOF
+
+chmod +x "$HOOKS_DIR/pre-push"
+echo "✅ Installed pre-push hook"
+
+echo ""
+echo "Git hooks installed successfully!"
+echo ""
+echo "Hooks will run automatically on commit and push."
+echo "To bypass hooks: git commit/push --no-verify"
+'''
+
+[tasks.uninstall-hooks]
+description = "Uninstall git hooks"
+script = '''
+#!/bin/bash
+HOOKS_DIR="$(git rev-parse --git-path hooks)"
+
+if [ -d "$HOOKS_DIR" ]; then
+    rm -f "$HOOKS_DIR/pre-commit"
+    rm -f "$HOOKS_DIR/pre-push"
+    echo "✅ Git hooks uninstalled"
+else
+    echo "⚠️  Hooks directory not found"
+fi
+'''
