@@ -26,20 +26,39 @@ pub fn delete_repo(
         select_repo_interactive(&repo_root)?
     } else if let Some(path) = repo_path {
         // Direct specification
-        let full_path = repo_root.join(&path);
-        if !full_path.exists() {
-            return Err(anyhow!("Repository not found: {}", path));
+
+        // Reject absolute paths
+        if PathBuf::from(&path).is_absolute() {
+            return Err(anyhow!("Absolute paths are not allowed: {}", path));
         }
-        full_path
+
+        let full_path = repo_root.join(&path);
+
+        // Canonicalize and validate the path is within repo_root
+        let canonical_path = full_path
+            .canonicalize()
+            .map_err(|_| anyhow!("Repository not found: {}", path))?;
+        let canonical_root = repo_root.canonicalize()?;
+
+        if !canonical_path.starts_with(&canonical_root) {
+            return Err(anyhow!(
+                "Path traversal detected: {} is outside repository root",
+                path
+            ));
+        }
+
+        canonical_path
     } else {
         return Err(anyhow!(
             "Either specify a repository path or use --interactive"
         ));
     };
 
+    // Safe: we've validated the path is within repo_root
+    let canonical_root = repo_root.canonicalize()?;
     let relative_path = target_path
-        .strip_prefix(&repo_root)
-        .unwrap()
+        .strip_prefix(&canonical_root)
+        .expect("path should be within repo_root after validation")
         .to_string_lossy()
         .to_string();
 
