@@ -2,10 +2,12 @@ use anyhow::Result;
 use clap::{Parser, Subcommand};
 
 mod clone;
+mod delete;
 mod ls;
 mod utils;
 
 use clone::clone_repo;
+use delete::delete_repo;
 use ls::list_repos;
 
 #[derive(Parser)]
@@ -54,6 +56,24 @@ enum Commands {
         #[arg(long)]
         json: bool,
     },
+
+    /// Delete a repository
+    Delete {
+        /// Repository path (relative to repo root)
+        repo_path: Option<String>,
+
+        /// Interactive selection
+        #[arg(short, long)]
+        interactive: bool,
+
+        /// Force delete without warnings
+        #[arg(short, long)]
+        force: bool,
+
+        /// Dry run (preview only)
+        #[arg(long)]
+        dry_run: bool,
+    },
 }
 
 fn main() -> Result<()> {
@@ -75,6 +95,14 @@ fn main() -> Result<()> {
             json,
         } => {
             list_repos(long, absolute, dirty, json)?;
+        }
+        Commands::Delete {
+            repo_path,
+            interactive,
+            force,
+            dry_run,
+        } => {
+            delete_repo(repo_path, interactive, force, dry_run)?;
         }
     }
 

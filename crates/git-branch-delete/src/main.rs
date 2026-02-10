@@ -22,6 +22,10 @@ struct Cli {
     /// Force delete (use -D instead of -d)
     #[arg(short, long, conflicts_with = "merged")]
     force: bool,
+
+    /// Also delete remote tracking branches
+    #[arg(short, long)]
+    remote: bool,
 }
 
 fn main() -> Result<()> {
@@ -99,14 +103,47 @@ fn main() -> Result<()> {
         return Ok(());
     }
 
+    let mut deleted_count = 0;
+    let mut remote_deleted_count = 0;
+
     for branch in &branches_to_delete {
+        // Delete local branch
         match git::delete_branch(&repo, branch, cli.force) {
-            Ok(_) => println!("Deleted branch '{}'", branch),
+            Ok(_) => {
+                println!("Deleted local branch '{}'", branch);
+                deleted_count += 1;
+
+                // Delete remote branch if --remote flag is set
+                if cli.remote && git::remote_branch_exists(&repo, branch, "origin")? {
+                    let answer =
+                        Confirm::new(&format!("Delete remote branch 'origin/{}'?", branch))
+                            .with_default(false)
+                            .prompt()?;
+
+                    if answer {
+                        match git::delete_remote_branch(&repo, branch, "origin") {
+                            Ok(_) => {
+                                println!("Deleted remote branch 'origin/{}'", branch);
+                                remote_deleted_count += 1;
+                            }
+                            Err(e) => {
+                                eprintln!(
+                                    "Failed to delete remote branch 'origin/{}': {}",
+                                    branch, e
+                                )
+                            }
+                        }
+                    }
+                }
+            }
             Err(e) => eprintln!("Failed to delete branch '{}': {}", branch, e),
         }
     }
 
-    println!("\nDeleted {} branches", branches_to_delete.len());
+    println!("\nDeleted {} local branches", deleted_count);
+    if cli.remote && remote_deleted_count > 0 {
+        println!("Deleted {} remote branches", remote_deleted_count);
+    }
 
     Ok(())
 }

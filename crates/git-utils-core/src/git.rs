@@ -89,6 +89,35 @@ pub fn delete_branch(repo: &Repository, branch_name: &str, force: bool) -> Resul
     Ok(())
 }
 
+/// Check if a remote branch exists
+pub fn remote_branch_exists(repo: &Repository, branch_name: &str, remote: &str) -> Result<bool> {
+    let remote_ref = format!("refs/remotes/{}/{}", remote, branch_name);
+    Ok(repo.find_reference(&remote_ref).is_ok())
+}
+
+/// Delete a remote branch
+pub fn delete_remote_branch(repo: &Repository, branch_name: &str, remote: &str) -> Result<()> {
+    use std::process::Command;
+
+    let repo_root = get_repo_root(repo)?;
+
+    let output = Command::new("git")
+        .args(["push", remote, "--delete", branch_name])
+        .current_dir(repo_root)
+        .output()
+        .map_err(|e| Error::Other(format!("Failed to execute git push: {}", e)))?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(Error::Other(format!(
+            "Failed to delete remote branch '{}': {}",
+            branch_name, stderr
+        )));
+    }
+
+    Ok(())
+}
+
 /// Get recent branches from reflog
 pub fn get_recent_branches(repo: &Repository) -> Result<Vec<String>> {
     let mut branches = Vec::new();

@@ -338,6 +338,7 @@ dependencies = [
  "anyhow",
  "clap",
  "git2",
+ "inquire",
  "serde",
  "serde_json",
  "shellexpand",
