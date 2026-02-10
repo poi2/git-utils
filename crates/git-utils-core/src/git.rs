@@ -22,10 +22,13 @@ pub fn get_local_branches(repo: &Repository) -> Result<Vec<String>> {
 /// Get the current branch name
 pub fn get_current_branch(repo: &Repository) -> Result<String> {
     let head = repo.head()?;
+    if !head.is_branch() {
+        return Err(Error::Other("HEAD is detached".to_string()));
+    }
     if let Some(name) = head.shorthand() {
         Ok(name.to_string())
     } else {
-        Err(Error::Other("HEAD is detached".to_string()))
+        Err(Error::Other("Could not determine branch name".to_string()))
     }
 }
 
