@@ -1,18 +1,35 @@
 use anyhow::{anyhow, Result};
-use clap::Args;
+use clap::{Args, ValueEnum};
 use std::fs;
 use std::io::{BufRead, BufReader, Write};
 use std::path::PathBuf;
+
+#[derive(Debug, Clone, Copy, ValueEnum)]
+enum Shell {
+    Bash,
+    Zsh,
+    Fish,
+}
+
+impl Shell {
+    fn as_str(&self) -> &'static str {
+        match self {
+            Shell::Bash => "bash",
+            Shell::Zsh => "zsh",
+            Shell::Fish => "fish",
+        }
+    }
+}
 
 #[derive(Args)]
 pub struct Setup {
     /// Specify shell (bash, zsh, fish)
     #[arg(long)]
-    shell: Option<String>,
+    shell: Option<Shell>,
 
-    /// Print configuration snippet
-    #[arg(long)]
-    print: Option<String>,
+    /// Print configuration snippet for the given shell (bash, zsh, fish)
+    #[arg(long, value_name = "SHELL")]
+    print: Option<Shell>,
 
     /// Print gitconfig settings
     #[arg(long)]
@@ -83,7 +100,7 @@ impl Setup {
             return Ok(());
         }
 
-        if let Some(shell) = &self.print {
+        if let Some(shell) = self.print {
             return self.print_config(shell);
         }
 
@@ -159,43 +176,42 @@ impl Setup {
 
         // Detect shell and add source line
         let shell = if let Some(s) = &self.shell {
-            s.clone()
+            *s
         } else {
             Self::detect_shell()?
         };
 
-        self.add_source_line(&shell)?;
+        self.add_source_line(shell)?;
 
         println!("\nSetup complete!");
-        let rc_path = if shell == "fish" {
-            "config/fish/config.fish".to_string()
-        } else {
-            format!("{}rc", shell)
+        let rc_path = match shell {
+            Shell::Fish => "config/fish/config.fish".to_string(),
+            Shell::Bash => "bashrc".to_string(),
+            Shell::Zsh => "zshrc".to_string(),
         };
         println!("Please restart your shell or run: source ~/.{}", rc_path);
 
         Ok(())
     }
 
-    fn add_source_line(&self, shell: &str) -> Result<()> {
+    fn add_source_line(&self, shell: Shell) -> Result<()> {
         let (rc_file, source_line) = match shell {
-            "bash" => (
+            Shell::Bash => (
                 Self::get_home_dir()?.join(".bashrc"),
                 "[ -f ~/.git-utils/env.sh ] && source ~/.git-utils/env.sh\n",
             ),
-            "zsh" => (
+            Shell::Zsh => (
                 Self::get_home_dir()?.join(".zshrc"),
                 "[ -f ~/.git-utils/env.sh ] && source ~/.git-utils/env.sh\n",
             ),
-            "fish" => (
+            Shell::Fish => (
                 Self::get_home_dir()?.join(".config/fish/config.fish"),
                 "test -f ~/.git-utils/env.fish && source ~/.git-utils/env.fish\n",
             ),
-            _ => return Err(anyhow!("Unsupported shell: {}", shell)),
         };
 
         // Create parent directory for fish config if needed
-        if shell == "fish" {
+        if matches!(shell, Shell::Fish) {
             if let Some(parent) = rc_file.parent() {
                 fs::create_dir_all(parent)?;
             }
@@ -227,17 +243,16 @@ impl Setup {
         Ok(())
     }
 
-    fn print_config(&self, shell: &str) -> Result<()> {
+    fn print_config(&self, shell: Shell) -> Result<()> {
         match shell {
-            "bash" | "zsh" => {
-                println!("# Add this to your ~/.{}rc:", shell);
+            Shell::Bash | Shell::Zsh => {
+                println!("# Add this to your ~/.{}rc:", shell.as_str());
                 println!("[ -f ~/.git-utils/env.sh ] && source ~/.git-utils/env.sh");
             }
-            "fish" => {
+            Shell::Fish => {
                 println!("# Add this to your ~/.config/fish/config.fish:");
                 println!("test -f ~/.git-utils/env.fish && source ~/.git-utils/env.fish");
             }
-            _ => return Err(anyhow!("Unsupported shell: {}", shell)),
         }
         Ok(())
     }
@@ -246,12 +261,11 @@ impl Setup {
         let git_utils_dir = Self::get_git_utils_dir()?;
 
         // Remove source lines from rc files
-        for shell in &["bash", "zsh", "fish"] {
-            let rc_file = match *shell {
-                "bash" => Self::get_home_dir()?.join(".bashrc"),
-                "zsh" => Self::get_home_dir()?.join(".zshrc"),
-                "fish" => Self::get_home_dir()?.join(".config/fish/config.fish"),
-                _ => continue,
+        for shell in [Shell::Bash, Shell::Zsh, Shell::Fish] {
+            let rc_file = match shell {
+                Shell::Bash => Self::get_home_dir()?.join(".bashrc"),
+                Shell::Zsh => Self::get_home_dir()?.join(".zshrc"),
+                Shell::Fish => Self::get_home_dir()?.join(".config/fish/config.fish"),
             };
 
             if rc_file.exists() {
@@ -294,14 +308,22 @@ impl Setup {
         Ok(())
     }
 
-    fn detect_shell() -> Result<String> {
-        if let Ok(shell) = std::env::var("SHELL") {
-            if let Some(shell_name) = shell.split('/').next_back() {
-                return Ok(shell_name.to_string());
+    fn detect_shell() -> Result<Shell> {
+        if let Ok(shell_path) = std::env::var("SHELL") {
+            if let Some(shell_name) = shell_path.split('/').next_back() {
+                return match shell_name {
+                    "bash" => Ok(Shell::Bash),
+                    "zsh" => Ok(Shell::Zsh),
+                    "fish" => Ok(Shell::Fish),
+                    _ => Err(anyhow!(
+                        "Unsupported shell: {}. Please specify with --shell (bash, zsh, fish)",
+                        shell_name
+                    )),
+                };
             }
         }
         Err(anyhow!(
-            "Could not detect shell. Please specify with --shell"
+            "Could not detect shell. Please specify with --shell (bash, zsh, fish)"
         ))
     }
 
