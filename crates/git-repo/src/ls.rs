@@ -104,7 +104,16 @@ pub fn list_repos(long: bool, absolute: bool, dirty: bool, json: bool) -> Result
 fn find_git_repos(root: &PathBuf) -> Result<Vec<PathBuf>> {
     let mut repos = Vec::new();
 
-    fn visit_dirs(dir: &PathBuf, repos: &mut Vec<PathBuf>) -> Result<()> {
+    fn visit_dirs(
+        dir: &PathBuf,
+        repos: &mut Vec<PathBuf>,
+        depth: usize,
+        max_depth: usize,
+    ) -> Result<()> {
+        if depth > max_depth {
+            return Ok(());
+        }
+
         if dir.is_dir() {
             // Check if this is a git repository
             if dir.join(".git").exists() {
@@ -117,14 +126,15 @@ fn find_git_repos(root: &PathBuf) -> Result<Vec<PathBuf>> {
                 let entry = entry?;
                 let path = entry.path();
                 if path.is_dir() {
-                    visit_dirs(&path, repos)?;
+                    visit_dirs(&path, repos, depth + 1, max_depth)?;
                 }
             }
         }
         Ok(())
     }
 
-    visit_dirs(root, &mut repos)?;
+    // For <root>/<domain>/<user>/<repo>, we need depth of 3
+    visit_dirs(root, &mut repos, 0, 3)?;
     Ok(repos)
 }
 
