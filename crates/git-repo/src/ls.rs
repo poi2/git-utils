@@ -102,6 +102,10 @@ pub fn list_repos(long: bool, absolute: bool, dirty: bool, json: bool) -> Result
 }
 
 fn find_git_repos(root: &PathBuf) -> Result<Vec<PathBuf>> {
+    // Maximum depth for repository discovery
+    // For <root>/<domain>/<user>/<repo> layout, we need depth of 3
+    const MAX_DEPTH: usize = 3;
+
     let mut repos = Vec::new();
 
     fn visit_dirs(
@@ -110,31 +114,34 @@ fn find_git_repos(root: &PathBuf) -> Result<Vec<PathBuf>> {
         depth: usize,
         max_depth: usize,
     ) -> Result<()> {
-        if depth > max_depth {
+        if !dir.is_dir() {
             return Ok(());
         }
 
-        if dir.is_dir() {
-            // Check if this is a git repository
-            if dir.join(".git").exists() {
-                repos.push(dir.clone());
-                return Ok(()); // Don't recurse into subdirectories of a git repo
-            }
+        // Check if this is a git repository
+        if dir.join(".git").exists() {
+            repos.push(dir.clone());
+            return Ok(()); // Don't recurse into subdirectories of a git repo
+        }
 
-            // Recurse into subdirectories
-            for entry in std::fs::read_dir(dir)? {
-                let entry = entry?;
-                let path = entry.path();
-                if path.is_dir() {
-                    visit_dirs(&path, repos, depth + 1, max_depth)?;
-                }
+        // Stop recursion if we've reached max depth
+        if depth >= max_depth {
+            return Ok(());
+        }
+
+        // Recurse into subdirectories
+        for entry in std::fs::read_dir(dir)? {
+            let entry = entry?;
+            let path = entry.path();
+            if path.is_dir() {
+                visit_dirs(&path, repos, depth + 1, max_depth)?;
             }
         }
+
         Ok(())
     }
 
-    // For <root>/<domain>/<user>/<repo>, we need depth of 3
-    visit_dirs(root, &mut repos, 0, 3)?;
+    visit_dirs(root, &mut repos, 0, MAX_DEPTH)?;
     Ok(repos)
 }
 
