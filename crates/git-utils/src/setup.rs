@@ -7,11 +7,11 @@ use std::path::PathBuf;
 #[derive(Args)]
 pub struct Setup {
     /// Specify shell (bash, zsh, fish)
-    #[arg(long)]
+    #[arg(long, value_parser = ["bash", "zsh", "fish"])]
     shell: Option<String>,
 
-    /// Print configuration snippet
-    #[arg(long)]
+    /// Print configuration snippet for the given shell (bash, zsh, fish)
+    #[arg(long, value_name = "SHELL", value_parser = ["bash", "zsh", "fish"])]
     print: Option<String>,
 
     /// Print gitconfig settings
