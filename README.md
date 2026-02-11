@@ -131,15 +131,6 @@ git repo ls --long
 # Show dirty repositories only
 git repo ls --dirty
 
-# Delete a repository (interactive)
-git repo delete --interactive
-
-# Delete a repository (direct)
-git repo delete github.com/user/repo
-
-# Preview deletion (dry run)
-git repo delete --dry-run --interactive
-
 # Switch between repositories (shell function)
 grs
 ```
