@@ -27,9 +27,9 @@
 - **Use the PR template**: Fill out all sections in `.github/pull_request_template.md`
   - **Summary**: Overview of changes (bullet points)
   - **Changes**: Detailed explanations
-  - **Test plan**: Verification steps (checkboxes)
-  - **Breaking changes**: Document any breaking changes
-  - **Related issues/PRs**: Link if applicable
+  - **Test Plan**: Verification steps (checkboxes)
+  - **Breaking Changes**: Document any breaking changes
+  - **Related Issues/PRs**: Link if applicable
 - **Request Copilot review**: Use GitHub Copilot to get automated feedback
 
 ### Updating PR After Push
