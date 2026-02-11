@@ -24,11 +24,12 @@
 ### PR Creation Guidelines
 
 - **Title**: Concise and accurately describe the changes
-- **Description must include**:
+- **Use the PR template**: Fill out all sections in `.github/pull_request_template.md`
   - **Summary**: Overview of changes (bullet points)
-  - **Test plan**: Testing methodology and verification steps
-  - **Breaking changes**: Explicitly document any breaking changes
-  - **Related issues/PRs**: Link if applicable
+  - **Changes**: Detailed explanations
+  - **Test Plan**: Verification steps (checkboxes)
+  - **Breaking Changes**: Document any breaking changes
+  - **Related Issues/PRs**: Link if applicable
 - **Request Copilot review**: Use GitHub Copilot to get automated feedback
 
 ### Updating PR After Push
