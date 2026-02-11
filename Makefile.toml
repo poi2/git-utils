@@ -23,22 +23,26 @@ args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings"]
 
 [tasks.check-unused-dependencies]
 description = "Check for unused dependencies with cargo-machete (fast)"
+install_crate = "cargo-machete"
 command = "cargo"
 args = ["machete"]
 
 [tasks.check-unused-dependencies-udeps]
 description = "Check for unused dependencies with cargo-udeps (slow but thorough)"
+install_crate = "cargo-udeps"
 toolchain = "nightly"
 command = "cargo"
 args = ["udeps", "--all-targets"]
 
 [tasks.markdown-fmt]
 description = "Check markdown formatting with rumdl"
+install_crate = { crate_name = "rumdl", binary = "rumdl", test_arg = "--version", version = "0.1.18" }
 command = "rumdl"
 args = ["check", "."]
 
 [tasks.markdown-fmt-fix]
 description = "Fix markdown formatting with rumdl"
+install_crate = { crate_name = "rumdl", binary = "rumdl", test_arg = "--version", version = "0.1.18" }
 command = "rumdl"
 args = ["fmt", "."]
 
