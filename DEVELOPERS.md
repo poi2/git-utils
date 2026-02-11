@@ -34,15 +34,19 @@ commitlint --version
 
 #### Git Hook Setup
 
-After installing commitlint-rs, set up the git hook:
+After installing commitlint-rs, set up git hooks using cargo-make:
 
 ```bash
-# Copy the hook template to .git/hooks/
-cp hooks/commit-msg .git/hooks/commit-msg
-chmod +x .git/hooks/commit-msg
+# Install all git hooks (pre-commit, pre-push, commit-msg)
+cargo make install-hooks
 ```
 
-The hook will automatically validate commit messages before they are created.
+This will install:
+- `pre-commit`: Runs format/lint/test checks before commit
+- `pre-push`: Runs format/lint/test checks before push
+- `commit-msg`: Validates commit message format with commitlint
+
+The commit-msg hook will automatically validate commit messages against Conventional Commits specification.
 
 #### Commit Message Format
 

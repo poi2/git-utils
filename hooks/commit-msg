@@ -3,12 +3,15 @@
 # This hook is triggered before commit message is finalized
 
 # Check if commitlint is installed
-if ! command -v commitlint &> /dev/null; then
+if ! command -v commitlint >/dev/null 2>&1; then
     echo "Error: commitlint-rs is not installed"
     echo "Please install it: cargo install commitlint-rs"
     echo "See DEVELOPERS.md for more details"
     exit 1
 fi
+
+# Change to repository root to ensure commitlint finds commitlint.toml
+cd "$(git rev-parse --show-toplevel)" || exit 1
 
 # Run commitlint on the commit message
 commitlint --edit "$1"

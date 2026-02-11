@@ -27,7 +27,7 @@ type-empty = [2, "never"]
 # Subject cannot be empty
 subject-empty = [2, "never"]
 
-# Subject must not start with uppercase (enforces lowercase start)
+# Subject must not be entirely uppercase
 subject-case = [2, "never", ["upper-case"]]
 
 # Header (type + scope + subject) max length

@@ -92,6 +92,16 @@ EOF
 chmod +x "$HOOKS_DIR/pre-push"
 echo "✅ Installed pre-push hook"
 
+# Install commit-msg hook for commitlint
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+if [ -f "$REPO_ROOT/hooks/commit-msg" ]; then
+    cp "$REPO_ROOT/hooks/commit-msg" "$HOOKS_DIR/commit-msg"
+    chmod +x "$HOOKS_DIR/commit-msg"
+    echo "✅ Installed commit-msg hook (commitlint)"
+else
+    echo "⚠️  hooks/commit-msg not found, skipping commit-msg hook installation"
+fi
+
 echo ""
 echo "Git hooks installed successfully!"
 echo ""
@@ -108,6 +118,7 @@ HOOKS_DIR="$(git rev-parse --git-path hooks)"
 if [ -d "$HOOKS_DIR" ]; then
     rm -f "$HOOKS_DIR/pre-commit"
     rm -f "$HOOKS_DIR/pre-push"
+    rm -f "$HOOKS_DIR/commit-msg"
     echo "✅ Git hooks uninstalled"
 else
     echo "⚠️  Hooks directory not found"

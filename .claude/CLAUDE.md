@@ -36,17 +36,17 @@
   - Example:
     ```bash
     gh pr edit <pr-number> --body "$(cat <<'EOF'
-    ## Summary
-    - Change summary
+## Summary
+- Change summary
 
-    ## Changes
-    - Response to review comments
-    - Additional changes
+## Changes
+- Response to review comments
+- Additional changes
 
-    ## Review Response
-    - Addressed @reviewer comment: Fixed XXX
-    EOF
-    )"
+## Review Response
+- Addressed @reviewer comment: Fixed XXX
+EOF
+)"
     ```
 
 ### Comment Resolution
@@ -55,11 +55,13 @@
 
 ## Workflow Example
 
+**Note**: Commit messages follow Conventional Commits format, enforced by commitlint-rs git hook.
+
 ```bash
 # 1. Create branch
 git checkout -b feature/new-functionality
 
-# 2. Development & commit
+# 2. Development & commit (format enforced by git hook)
 git commit -m "feat(module): add new functionality"
 
 # 3. Self-review before creating PR
@@ -72,7 +74,7 @@ gh pr create --title "..." --body "..."
 
 # 5. Request Copilot review (via GitHub UI)
 
-# 6. After receiving review feedback
+# 6. After receiving review feedback (format enforced by git hook)
 git commit -m "fix(module): address review comments"
 git push
 
