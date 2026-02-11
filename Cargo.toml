@@ -3,7 +3,7 @@ members = [
     "crates/git-utils-core",
     "crates/git-branch-switch",
     "crates/git-branch-delete",
-    "crates/git-repo",
+    "crates/git-repos",
     "crates/git-pr-merged",
     "crates/git-utils",
 ]

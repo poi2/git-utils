@@ -6,7 +6,7 @@ Git utilities for managing repositories and branches interactively.
 
 - **git-branch-switch**: Interactive branch switcher with inquire
 - **git-branch-delete**: Safe branch deletion with merge status checking
-- **git-repo**: Repository management (clone, list) with organized directory structure
+- **git-repos**: Repository management (clone, list) with organized directory structure
 - **git-pr-merged**: List merged pull requests for release notes
 - **git-utils**: Setup and configuration tool
 
@@ -17,7 +17,7 @@ Git utilities for managing repositories and branches interactively.
 ```bash
 cargo install --path crates/git-branch-switch
 cargo install --path crates/git-branch-delete
-cargo install --path crates/git-repo
+cargo install --path crates/git-repos
 cargo install --path crates/git-pr-merged
 cargo install --path crates/git-utils
 ```
@@ -34,17 +34,17 @@ This will:
 - Create `~/.git-utils/env.sh` and `~/.git-utils/env.fish`
 - Add source lines to your shell rc file
 - Set up the `grs` (git repository switch) shell function
-- Export `GIT_REPO_ROOT` environment variable (default: `~/src`)
+- Export `GIT_REPOS_ROOT` environment variable (default: `~/src`)
 
-**Note**: `git-repo` commands will work immediately after setup using the `GIT_REPO_ROOT` environment variable. You can optionally configure `git-repo.root` in your `.gitconfig` for more control.
+**Note**: `git-repos` commands will work immediately after setup using the `GIT_REPOS_ROOT` environment variable. You can optionally configure `git-repos.root` in your `.gitconfig` for more control.
 
 ## Configuration
 
 ### Repository root
 
-`git-repo` uses the following priority to determine the repository root:
-1. Git config: `git-repo.root`
-2. Environment variable: `GIT_REPO_ROOT` (set by `git-utils setup`)
+`git-repos` uses the following priority to determine the repository root:
+1. Git config: `git-repos.root`
+2. Environment variable: `GIT_REPOS_ROOT` (set by `git-utils setup`)
 
 Choose one of:
 
@@ -53,7 +53,7 @@ Choose one of:
 # Already set by git-utils setup in ~/.git-utils/env.sh
 
 # Option 2: Use git config (optional, overrides environment variable)
-git config --global git-repo.root ~/src
+git config --global git-repos.root ~/src
 ```
 
 ### Git config
@@ -67,7 +67,7 @@ git-utils setup --gitconfig >> ~/.gitconfig
 Or manually add:
 
 ```ini
-[git-repo]
+[git-repos]
     root = ~/src
     prefer-ssh = true
 
@@ -77,7 +77,7 @@ Or manually add:
 [alias]
     bs = !git-branch-switch
     bd = !git-branch-delete
-    repo = !git-repo
+    repos = !git-repos
     pr-merged = !git-pr-merged
 ```
 
@@ -116,17 +116,17 @@ git branch-delete --all --force
 
 ```bash
 # Clone to organized directory structure
-git repo clone https://github.com/user/repo
+git repos clone https://github.com/user/repo
 # → Clones to ~/src/github.com/user/repo
 
 # List repositories
-git repo ls
+git repos ls
 
 # List with details
-git repo ls --long
+git repos ls --long
 
 # Show dirty repositories only
-git repo ls --dirty
+git repos ls --dirty
 
 # Switch between repositories (shell function)
 grs
