@@ -14,12 +14,6 @@ pub fn clone_repo(url: &str, shallow: bool, bare: bool, branch: Option<&str>) ->
         .join(&info.user)
         .join(&info.repo);
 
-    if target_path.exists() {
-        println!("Directory already exists: {}", target_path.display());
-        println!("Repository already cloned");
-        return Ok(());
-    }
-
     // Create parent directories
     if let Some(parent) = target_path.parent() {
         std::fs::create_dir_all(parent)?;
