@@ -167,19 +167,22 @@ mod tests {
 
     #[test]
     fn test_remote_branch_exists() {
-        // This test requires a git repository with remotes
+        // This test requires running inside a git repository.
+        // It verifies that a clearly non-existent branch is reported as not existing.
         if let Ok(repo) = open_repo() {
             // Test with a non-existent branch
             let result = remote_branch_exists(&repo, "nonexistent-branch-12345", "origin");
 
-            // Should return Ok(false) for non-existent branch
-            // or Err if no remote exists
-            match result {
-                Ok(exists) => assert!(!exists, "Non-existent branch should not exist"),
-                Err(_) => {
-                    // It's okay if remote doesn't exist
-                }
-            }
+            // remote_branch_exists is expected to normalize "not found" (missing remote
+            // or missing remote branch) into Ok(false), rather than returning Err.
+            let exists = result.expect(
+                "remote_branch_exists should return Ok(false) for a missing remote/branch, \
+                 not Err",
+            );
+            assert!(
+                !exists,
+                "Non-existent remote branch should be reported as not existing"
+            );
         }
     }
 }

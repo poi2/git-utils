@@ -111,7 +111,7 @@ git branch-delete --select
 # Force delete all branches
 git branch-delete --all --force
 
-# Delete merged branches and their remote tracking branches
+# Delete merged branches and their remote branches
 git branch-delete --remote
 ```
 

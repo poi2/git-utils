@@ -23,7 +23,7 @@ struct Cli {
     #[arg(short, long, conflicts_with = "merged")]
     force: bool,
 
-    /// Also delete remote tracking branches
+    /// Also delete corresponding branches from the remote (e.g. origin)
     #[arg(short, long)]
     remote: bool,
 }
