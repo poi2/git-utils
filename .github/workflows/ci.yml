@@ -5,14 +5,47 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: '0 0 * * *'  # 毎日UTC 0:00 (JST 9:00)
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  filter:
+    name: Detect Changed Paths
+    runs-on: ubuntu-latest
+    if: github.event_name != 'schedule'
+    outputs:
+      rust: ${{ steps.filter.outputs.rust }}
+      markdown: ${{ steps.filter.outputs.markdown }}
+      workflows: ${{ steps.filter.outputs.workflows }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            rust:
+              - 'crates/**/*.rs'
+              - 'crates/**/Cargo.toml'
+              - 'Cargo.toml'
+              - 'Cargo.lock'
+            markdown:
+              - '**.md'
+              - '.rumdl.toml'
+            workflows:
+              - '.github/workflows/**'
+
   test:
     name: Test
     runs-on: ${{ matrix.os }}
+    needs: filter
+    if: |
+      always() &&
+      (github.event_name == 'schedule' ||
+       needs.filter.outputs.rust == 'true' ||
+       needs.filter.outputs.workflows == 'true')
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -26,6 +59,12 @@ jobs:
   fmt:
     name: Format
     runs-on: ubuntu-latest
+    needs: filter
+    if: |
+      always() &&
+      (github.event_name == 'schedule' ||
+       needs.filter.outputs.rust == 'true' ||
+       needs.filter.outputs.workflows == 'true')
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -37,6 +76,12 @@ jobs:
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
+    needs: filter
+    if: |
+      always() &&
+      (github.event_name == 'schedule' ||
+       needs.filter.outputs.rust == 'true' ||
+       needs.filter.outputs.workflows == 'true')
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -49,6 +94,12 @@ jobs:
   check-unused-deps:
     name: Check Unused Dependencies (machete)
     runs-on: ubuntu-latest
+    needs: filter
+    if: |
+      always() &&
+      (github.event_name == 'schedule' ||
+       needs.filter.outputs.rust == 'true' ||
+       needs.filter.outputs.workflows == 'true')
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -62,6 +113,12 @@ jobs:
   markdown-fmt:
     name: Markdown Format
     runs-on: ubuntu-latest
+    needs: filter
+    if: |
+      always() &&
+      (github.event_name == 'schedule' ||
+       needs.filter.outputs.markdown == 'true' ||
+       needs.filter.outputs.workflows == 'true')
     steps:
       - uses: actions/checkout@v4
       - uses: taiki-e/install-action@v2
@@ -78,14 +135,15 @@ jobs:
     steps:
       - name: Check all jobs
         run: |
-          if [[ "${{ needs.test.result }}" == "success" && \
-                "${{ needs.fmt.result }}" == "success" && \
-                "${{ needs.clippy.result }}" == "success" && \
-                "${{ needs['check-unused-deps'].result }}" == "success" && \
-                "${{ needs['markdown-fmt'].result }}" == "success" ]]; then
-            echo "All CI jobs passed!"
-            exit 0
-          else
-            echo "Some CI jobs failed!"
+          results='${{ toJSON(needs) }}'
+          echo "Job results:"
+          echo "$results" | jq '.'
+
+          # failure または cancelled があれば失敗
+          if echo "$results" | jq -e '.[] | select(.result == "failure" or .result == "cancelled")' > /dev/null; then
+            echo "❌ Some CI jobs failed or were cancelled!"
             exit 1
           fi
+
+          echo "✅ All CI jobs passed or were skipped appropriately!"
+          exit 0
