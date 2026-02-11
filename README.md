@@ -169,7 +169,7 @@ cargo install cargo-machete --locked  # Fast, recommended for daily use
 
 # Optional: For thorough unused dependency checks
 rustup toolchain install nightly
-cargo install cargo-udeps --locked  # Slow but more accurate
+cargo +nightly install cargo-udeps --locked  # Slow but more accurate
 ```
 
 ### Build

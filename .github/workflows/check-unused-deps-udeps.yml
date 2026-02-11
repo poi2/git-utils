@@ -16,6 +16,6 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - uses: taiki-e/install-action@v2
         with:
-          tool: cargo-udeps
+          tool: cargo-udeps@0.1.60
       - name: Check for unused dependencies
         run: cargo +nightly udeps --all-targets
