@@ -23,13 +23,13 @@ args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings"]
 
 [tasks.check-unused-dependencies]
 description = "Check for unused dependencies with cargo-machete (fast)"
-install_crate = "cargo-machete"
+install_crate = { crate_name = "cargo-machete", binary = "cargo-machete", test_arg = "--version", version = "0.9.1" }
 command = "cargo"
 args = ["machete"]
 
 [tasks.check-unused-dependencies-udeps]
 description = "Check for unused dependencies with cargo-udeps (slow but thorough)"
-install_crate = "cargo-udeps"
+install_crate = { crate_name = "cargo-udeps", binary = "cargo-udeps", test_arg = "--version", version = "0.1.60" }
 toolchain = "nightly"
 command = "cargo"
 args = ["udeps", "--all-targets"]
