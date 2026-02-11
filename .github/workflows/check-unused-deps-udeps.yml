@@ -1,0 +1,21 @@
+name: Check Unused Dependencies (udeps)
+
+on:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check-unused-deps-udeps:
+    name: Check Unused Dependencies (udeps)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-udeps@0.1.60
+      - name: Check for unused dependencies
+        run: cargo +nightly udeps --all-targets

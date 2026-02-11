@@ -21,9 +21,20 @@ description = "Run clippy linter"
 command = "cargo"
 args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings"]
 
+[tasks.check-unused-dependencies]
+description = "Check for unused dependencies with cargo-machete (fast)"
+command = "cargo"
+args = ["machete"]
+
+[tasks.check-unused-dependencies-udeps]
+description = "Check for unused dependencies with cargo-udeps (slow but thorough)"
+toolchain = "nightly"
+command = "cargo"
+args = ["udeps", "--all-targets"]
+
 [tasks.check-all]
-description = "Run all checks (format, clippy, test)"
-dependencies = ["fmt", "clippy", "test"]
+description = "Run all checks (format, clippy, test, unused dependencies)"
+dependencies = ["fmt", "clippy", "test", "check-unused-dependencies"]
 
 [tasks.ci]
 description = "Run CI checks (same as check-all)"
