@@ -104,13 +104,14 @@ Install rumdl using one of the following methods:
 **Option 1: Cargo (Recommended)**
 
 ```bash
-cargo install rumdl --locked
+# Install the version pinned in CI for consistency
+cargo install rumdl@0.1.18 --locked
 ```
 
 **Option 2: Cargo Binstall**
 
 ```bash
-cargo binstall rumdl
+cargo binstall rumdl@0.1.18
 ```
 
 **Option 3: Homebrew**

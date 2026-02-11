@@ -169,8 +169,8 @@ rustup component add rustfmt clippy
 # For unused dependency checks
 cargo install cargo-machete --locked  # Fast, recommended for daily use
 
-# For markdown linting and formatting
-cargo install rumdl --locked
+# For markdown linting and formatting (version pinned to match CI)
+cargo install rumdl@0.1.18 --locked
 
 # Optional: For thorough unused dependency checks
 rustup toolchain install nightly
