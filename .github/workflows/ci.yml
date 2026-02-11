@@ -32,7 +32,7 @@ jobs:
               - 'Cargo.toml'
               - 'Cargo.lock'
             markdown:
-              - '**.md'
+              - '**/*.md'
               - '.rumdl.toml'
             workflows:
               - '.github/workflows/**'
