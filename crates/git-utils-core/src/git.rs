@@ -89,39 +89,6 @@ pub fn delete_branch(repo: &Repository, branch_name: &str, force: bool) -> Resul
     Ok(())
 }
 
-/// Check if a remote branch exists
-pub fn remote_branch_exists(repo: &Repository, branch_name: &str, remote: &str) -> Result<bool> {
-    let remote_ref = format!("refs/remotes/{}/{}", remote, branch_name);
-    match repo.find_reference(&remote_ref) {
-        Ok(_) => Ok(true),
-        Err(e) if e.code() == git2::ErrorCode::NotFound => Ok(false),
-        Err(e) => Err(e.into()),
-    }
-}
-
-/// Delete a remote branch
-pub fn delete_remote_branch(repo: &Repository, branch_name: &str, remote: &str) -> Result<()> {
-    use std::process::Command;
-
-    let repo_root = get_repo_root(repo)?;
-
-    let output = Command::new("git")
-        .args(["push", remote, "--delete", branch_name])
-        .current_dir(repo_root)
-        .output()
-        .map_err(|e| Error::Other(format!("Failed to execute git push: {}", e)))?;
-
-    if !output.status.success() {
-        let stderr = String::from_utf8_lossy(&output.stderr);
-        return Err(Error::Other(format!(
-            "Failed to delete remote branch '{}': {}",
-            branch_name, stderr
-        )));
-    }
-
-    Ok(())
-}
-
 /// Get recent branches from reflog
 pub fn get_recent_branches(repo: &Repository) -> Result<Vec<String>> {
     let mut branches = Vec::new();
@@ -162,27 +129,6 @@ mod tests {
         // Skip if not in a git repo
         if let Ok(repo) = open_repo() {
             assert!(!repo.is_bare());
-        }
-    }
-
-    #[test]
-    fn test_remote_branch_exists() {
-        // This test requires running inside a git repository.
-        // It verifies that a clearly non-existent branch is reported as not existing.
-        if let Ok(repo) = open_repo() {
-            // Test with a non-existent branch
-            let result = remote_branch_exists(&repo, "nonexistent-branch-12345", "origin");
-
-            // remote_branch_exists is expected to normalize "not found" (missing remote
-            // or missing remote branch) into Ok(false), rather than returning Err.
-            let exists = result.expect(
-                "remote_branch_exists should return Ok(false) for a missing remote/branch, \
-                 not Err",
-            );
-            assert!(
-                !exists,
-                "Non-existent remote branch should be reported as not existing"
-            );
         }
     }
 }
