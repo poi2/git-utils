@@ -163,6 +163,8 @@ Install cargo-make for task automation and ensure the required Rust components a
 ```bash
 cargo install cargo-make
 rustup component add rustfmt clippy
+rustup toolchain install nightly  # Required for cargo-udeps
+cargo install cargo-udeps --locked
 ```
 
 ### Build
@@ -188,7 +190,10 @@ cargo make fmt-fix
 # Run clippy linter
 cargo make clippy
 
-# Run all checks (format, clippy, test)
+# Check for unused dependencies (requires nightly toolchain)
+cargo make check-unused-dependencies
+
+# Run all checks (format, clippy, test, unused dependencies)
 cargo make check-all
 ```
 
