@@ -134,6 +134,7 @@ set -e
 echo "Installing all git-utils binaries..."
 echo ""
 
+# NOTE: Keep this list in sync with uninstall-all task
 BINARIES=(
     "git-branch-switch"
     "git-branch-delete"
@@ -144,7 +145,7 @@ BINARIES=(
 
 for binary in "${BINARIES[@]}"; do
     echo "📦 Installing $binary..."
-    cargo install --path "crates/$binary"
+    cargo install --path "crates/$binary" --force --locked
     echo ""
 done
 
@@ -155,7 +156,7 @@ for binary in "${BINARIES[@]}"; do
     echo "  - $binary"
 done
 echo ""
-echo "Binaries are available in: ~/.cargo/bin/"
+echo "Binaries are available in: ${CARGO_HOME:-$HOME/.cargo}/bin"
 '''
 
 [tasks.uninstall-all]
@@ -166,6 +167,7 @@ script = '''
 echo "Uninstalling all git-utils binaries..."
 echo ""
 
+# NOTE: Keep this list in sync with install-all task
 BINARIES=(
     "git-branch-switch"
     "git-branch-delete"
@@ -176,7 +178,12 @@ BINARIES=(
 
 for binary in "${BINARIES[@]}"; do
     echo "🗑️  Uninstalling $binary..."
-    cargo uninstall "$binary" 2>/dev/null || echo "  ⚠️  $binary not found (may not be installed)"
+    if cargo uninstall "$binary" 2>&1 | grep -q "package .* is not installed"; then
+        echo "  ⚠️  $binary not found (may not be installed)"
+    elif [ ${PIPESTATUS[0]} -ne 0 ]; then
+        echo "  ❌ Failed to uninstall $binary"
+        exit 1
+    fi
 done
 
 echo ""
