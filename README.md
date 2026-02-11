@@ -163,19 +163,17 @@ git pr-merged v1.0.0..HEAD --web
 Install cargo-make for task automation and ensure the required Rust components are installed:
 
 ```bash
+# Install cargo-make (task runner)
 cargo install cargo-make
+
+# Install required Rust components
 rustup component add rustfmt clippy
 
-# For unused dependency checks
-cargo install cargo-machete --locked  # Fast, recommended for daily use
-
-# For markdown linting and formatting (version pinned to match CI)
-cargo install rumdl@0.1.18 --locked
-
-# Optional: For thorough unused dependency checks
+# Install nightly toolchain (required for cargo-udeps)
 rustup toolchain install nightly
-cargo +nightly install cargo-udeps --locked  # Slow but more accurate
 ```
+
+**Note**: Development tools (cargo-machete, cargo-udeps, rumdl) are automatically installed by cargo-make when you run tasks. No manual installation needed.
 
 ### Build
 

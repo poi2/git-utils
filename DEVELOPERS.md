@@ -97,36 +97,9 @@ git commit -m "Update code"
 
 This project uses [rumdl](https://github.com/rvben/rumdl) to lint and format Markdown files.
 
-#### Installation
+#### Setup
 
-Install rumdl using one of the following methods:
-
-**Option 1: Cargo (Recommended)**
-
-```bash
-# Install the version pinned in CI for consistency
-cargo install rumdl@0.1.18 --locked
-```
-
-**Option 2: Cargo Binstall**
-
-```bash
-cargo binstall rumdl@0.1.18
-```
-
-**Option 3: Homebrew**
-
-```bash
-brew install rumdl
-```
-
-#### Verification
-
-After installation, verify it's working:
-
-```bash
-rumdl --version
-```
+rumdl is automatically installed by cargo-make when you run markdown tasks. No manual installation needed.
 
 #### Usage
 
