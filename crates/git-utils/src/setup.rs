@@ -41,40 +41,40 @@ pub struct Setup {
 }
 
 const ENV_SH_TEMPLATE: &str = r#"# git-utils environment setup (bash/zsh)
-export GIT_REPO_ROOT="${GIT_REPO_ROOT:-$HOME/src}"
+export GIT_REPOS_ROOT="${GIT_REPOS_ROOT:-$HOME/src}"
 
 # Shell function for repository switching
 grs() {
-    local repo=$(git-repo ls 2>/dev/null | fzf \
-        --preview 'git -C $GIT_REPO_ROOT/{} log -1 --format="%cr%n%s" 2>/dev/null' \
+    local repo=$(git-repos ls 2>/dev/null | fzf \
+        --preview 'git -C $GIT_REPOS_ROOT/{} log -1 --format="%cr%n%s" 2>/dev/null' \
         --preview-window=right:50%:wrap \
         --height=100%)
 
     if [ -n "$repo" ]; then
-        cd "$GIT_REPO_ROOT/$repo"
+        cd "$GIT_REPOS_ROOT/$repo"
     fi
 }
 "#;
 
 const ENV_FISH_TEMPLATE: &str = r#"# git-utils environment setup (fish)
-set -gx GIT_REPO_ROOT (test -n "$GIT_REPO_ROOT"; and echo $GIT_REPO_ROOT; or echo "$HOME/src")
+set -gx GIT_REPOS_ROOT (test -n "$GIT_REPOS_ROOT"; and echo $GIT_REPOS_ROOT; or echo "$HOME/src")
 
 # Shell function for repository switching
 function grs
-    set result (git-repo ls 2>/dev/null | fzf \
-        --preview 'git -C $GIT_REPO_ROOT/{} log -1 --format="%cr%n%s" 2>/dev/null' \
+    set result (git-repos ls 2>/dev/null | fzf \
+        --preview 'git -C $GIT_REPOS_ROOT/{} log -1 --format="%cr%n%s" 2>/dev/null' \
         --preview-window=right:50%:wrap \
         --height=100%)
 
     if test -n "$result"
-        cd "$GIT_REPO_ROOT/$result"
+        cd "$GIT_REPOS_ROOT/$result"
         commandline -f repaint
     end
 end
 "#;
 
 const GITCONFIG_TEMPLATE: &str = r#"# git-utils recommended settings
-[git-repo]
+[git-repos]
     root = ~/src
     prefer-ssh = true
 
@@ -85,7 +85,7 @@ const GITCONFIG_TEMPLATE: &str = r#"# git-utils recommended settings
 [alias]
     bs = !git-branch-switch
     bd = !git-branch-delete
-    repo = !git-repo
+    repos = !git-repos
     pr-merged = !git-pr-merged
 "#;
 

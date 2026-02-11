@@ -1,5 +1,5 @@
 [package]
-name = "git-repo"
+name = "git-repos"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -7,7 +7,7 @@ license.workspace = true
 repository.workspace = true
 
 [[bin]]
-name = "git-repo"
+name = "git-repos"
 path = "src/main.rs"
 
 [dependencies]

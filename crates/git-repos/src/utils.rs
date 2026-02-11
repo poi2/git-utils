@@ -7,14 +7,14 @@ use url::Url;
 pub fn get_repo_root() -> Result<PathBuf> {
     // Try git config first
     if let Ok(config) = Config::open_default() {
-        if let Ok(root) = config.get_string("git-repo.root") {
+        if let Ok(root) = config.get_string("git-repos.root") {
             let expanded = shellexpand::tilde(&root);
             return Ok(PathBuf::from(expanded.as_ref()));
         }
     }
 
-    // Fall back to GIT_REPO_ROOT environment variable
-    if let Ok(root) = std::env::var("GIT_REPO_ROOT") {
+    // Fall back to GIT_REPOS_ROOT environment variable
+    if let Ok(root) = std::env::var("GIT_REPOS_ROOT") {
         let expanded = shellexpand::tilde(&root);
         return Ok(PathBuf::from(expanded.as_ref()));
     }
@@ -22,15 +22,15 @@ pub fn get_repo_root() -> Result<PathBuf> {
     Err(anyhow!(
         "Repository root not configured.\n\
          Set either:\n\
-         - git config --global git-repo.root <path>\n\
-         - export GIT_REPO_ROOT=<path> (in your shell rc file)"
+         - git config --global git-repos.root <path>\n\
+         - export GIT_REPOS_ROOT=<path> (in your shell rc file)"
     ))
 }
 
 /// Check if SSH is preferred from git config
 pub fn prefer_ssh() -> bool {
     if let Ok(config) = Config::open_default() {
-        if let Ok(prefer) = config.get_bool("git-repo.prefer-ssh") {
+        if let Ok(prefer) = config.get_bool("git-repos.prefer-ssh") {
             return prefer;
         }
     }

@@ -9,7 +9,7 @@ use clone::clone_repo;
 use ls::list_repos;
 
 #[derive(Parser)]
-#[command(name = "git-repo")]
+#[command(name = "git-repos")]
 #[command(about = "Manage git repositories", long_about = None)]
 struct Cli {
     #[command(subcommand)]
