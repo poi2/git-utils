@@ -34,30 +34,10 @@
 ### Updating PR After Push
 
 - **MUST update PR description after pushing new commits**
-  - Use `gh pr edit <pr-number>` to update
+  - Edit the PR description on GitHub web UI or use `gh pr edit <pr-number>`
   - Reflect new changes in the description
   - Document review comment responses
-  - Example:
-
-    ```bash
-    gh pr edit <pr-number> --body "$(cat <<'EOF'
-
-## Summary
-
-- Change summary
-
-## Changes
-
-- Response to review comments
-- Additional changes
-
-## Review Response
-
-- Addressed @reviewer comment: Fixed XXX
-EOF
-)"
-
-    ```text
+  - Add a "Review Response" section to explain how you addressed comments
 
 ### Comment Resolution
 
