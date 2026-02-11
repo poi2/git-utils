@@ -59,10 +59,21 @@ jobs:
       - name: Check for unused dependencies
         run: cargo machete
 
+  markdown-fmt:
+    name: Markdown Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: rumdl@0.1.18
+      - name: Check markdown formatting
+        run: rumdl check .
+
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
-    needs: [test, fmt, clippy, check-unused-deps]
+    needs: [test, fmt, clippy, check-unused-deps, markdown-fmt]
     if: always()
     steps:
       - name: Check all jobs
@@ -70,7 +81,8 @@ jobs:
           if [[ "${{ needs.test.result }}" == "success" && \
                 "${{ needs.fmt.result }}" == "success" && \
                 "${{ needs.clippy.result }}" == "success" && \
-                "${{ needs['check-unused-deps'].result }}" == "success" ]]; then
+                "${{ needs['check-unused-deps'].result }}" == "success" && \
+                "${{ needs['markdown-fmt'].result }}" == "success" ]]; then
             echo "All CI jobs passed!"
             exit 0
           else

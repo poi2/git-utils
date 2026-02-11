@@ -3,6 +3,7 @@
 ## Pull Request Best Practices
 
 ### PR Size and Scope
+
 - **Keep PRs small and focused**
   - Easier to review and less likely to introduce bugs
   - Aim for <400 lines of changes when possible
@@ -10,6 +11,7 @@
 - **Single responsibility**: One PR should address one concern
 
 ### Before Creating PR
+
 - **Self-review required**
   - Review your own changes before requesting review
   - Check for debug code, commented code, or TODO items
@@ -20,6 +22,7 @@
   - Fix linting and formatting issues
 
 ### PR Creation Guidelines
+
 - **Title**: Concise and accurately describe the changes
 - **Description must include**:
   - **Summary**: Overview of changes (bullet points)
@@ -29,27 +32,35 @@
 - **Request Copilot review**: Use GitHub Copilot to get automated feedback
 
 ### Updating PR After Push
+
 - **MUST update PR description after pushing new commits**
   - Use `gh pr edit <pr-number>` to update
   - Reflect new changes in the description
   - Document review comment responses
   - Example:
+
     ```bash
     gh pr edit <pr-number> --body "$(cat <<'EOF'
+
 ## Summary
+
 - Change summary
 
 ## Changes
+
 - Response to review comments
 - Additional changes
 
 ## Review Response
+
 - Addressed @reviewer comment: Fixed XXX
 EOF
 )"
-    ```
+
+    ```text
 
 ### Comment Resolution
+
 - Comments are automatically enforced by GitHub's "Require conversation resolution before merging" setting
 - Always reply to comments explaining your changes or reasoning
 

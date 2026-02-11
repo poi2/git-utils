@@ -31,6 +31,7 @@ git-utils setup
 ```
 
 This will:
+
 - Create `~/.git-utils/env.sh` and `~/.git-utils/env.fish`
 - Add source lines to your shell rc file
 - Set up the `grs` (git repository switch) shell function
@@ -43,6 +44,7 @@ This will:
 ### Repository root
 
 `git-repos` uses the following priority to determine the repository root:
+
 1. Git config: `git-repos.root`
 2. Environment variable: `GIT_REPOS_ROOT` (set by `git-utils setup`)
 
@@ -167,6 +169,9 @@ rustup component add rustfmt clippy
 # For unused dependency checks
 cargo install cargo-machete --locked  # Fast, recommended for daily use
 
+# For markdown linting and formatting
+cargo install rumdl --locked
+
 # Optional: For thorough unused dependency checks
 rustup toolchain install nightly
 cargo +nightly install cargo-udeps --locked  # Slow but more accurate
@@ -201,7 +206,13 @@ cargo make check-unused-dependencies
 # Check for unused dependencies (slow but thorough, uses cargo-udeps)
 cargo make check-unused-dependencies-udeps
 
-# Run all checks (format, clippy, test, unused dependencies)
+# Check markdown formatting
+cargo make markdown-fmt
+
+# Fix markdown formatting
+cargo make markdown-fmt-fix
+
+# Run all checks (format, clippy, test, unused dependencies, markdown)
 cargo make check-all
 ```
 
@@ -214,6 +225,7 @@ cargo make install-hooks
 ```
 
 This installs:
+
 - **pre-commit hook**: Runs `cargo make check-all` before each commit
 - **pre-push hook**: Runs `cargo make check-all` before each push
 
