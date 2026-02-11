@@ -47,16 +47,16 @@ jobs:
         run: cargo clippy --all-targets --all-features -- -D warnings
 
   check-unused-deps:
-    name: Check Unused Dependencies
+    name: Check Unused Dependencies (machete)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
+      - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
-      - name: Install cargo-udeps
-        run: cargo install cargo-udeps --locked
+      - name: Install cargo-machete
+        run: cargo install cargo-machete --locked
       - name: Check for unused dependencies
-        run: cargo +nightly udeps --all-targets
+        run: cargo machete
 
   ci-success:
     name: CI Success
