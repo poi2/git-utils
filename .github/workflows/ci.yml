@@ -69,7 +69,7 @@ jobs:
           if [[ "${{ needs.test.result }}" == "success" && \
                 "${{ needs.fmt.result }}" == "success" && \
                 "${{ needs.clippy.result }}" == "success" && \
-                "${{ needs.check-unused-deps.result }}" == "success" ]]; then
+                "${{ needs['check-unused-deps'].result }}" == "success" ]]; then
             echo "All CI jobs passed!"
             exit 0
           else
