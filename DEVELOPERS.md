@@ -11,16 +11,19 @@ This project uses [commitlint-rs](https://github.com/KeisukeYamashita/commitlint
 Install commitlint-rs using one of the following methods:
 
 **Option 1: Cargo (Recommended)**
+
 ```bash
 cargo install commitlint-rs
 ```
 
 **Option 2: Cargo Binstall**
+
 ```bash
 cargo binstall commitlint-rs
 ```
 
 **Option 3: Docker**
+
 ```bash
 docker pull 1915keke/commitlint
 ```
@@ -28,6 +31,7 @@ docker pull 1915keke/commitlint
 #### Verification
 
 After installation, verify it's working:
+
 ```bash
 commitlint --version
 ```
@@ -42,6 +46,7 @@ cargo make install-hooks
 ```
 
 This will install:
+
 - `pre-commit`: Runs format/lint/test checks before commit
 - `pre-push`: Runs format/lint/test checks before push
 - `commit-msg`: Validates commit message format with commitlint
@@ -52,7 +57,7 @@ The commit-msg hook will automatically validate commit messages against Conventi
 
 All commits must follow the Conventional Commits specification:
 
-```
+```text
 <type>(<scope>): <subject>
 
 [optional body]
@@ -61,6 +66,7 @@ All commits must follow the Conventional Commits specification:
 ```
 
 **Types:**
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -74,6 +80,7 @@ All commits must follow the Conventional Commits specification:
 - `revert`: Revert a previous commit
 
 **Examples:**
+
 ```bash
 # Good commits
 git commit -m "feat(cli): add new sync command"
@@ -85,6 +92,61 @@ git commit -m "fixed stuff"
 git commit -m "WIP"
 git commit -m "Update code"
 ```
+
+### rumdl
+
+This project uses [rumdl](https://github.com/rvben/rumdl) to lint and format Markdown files.
+
+#### Installation
+
+Install rumdl using one of the following methods:
+
+**Option 1: Cargo (Recommended)**
+
+```bash
+# Install the version pinned in CI for consistency
+cargo install rumdl@0.1.18 --locked
+```
+
+**Option 2: Cargo Binstall**
+
+```bash
+cargo binstall rumdl@0.1.18
+```
+
+**Option 3: Homebrew**
+
+```bash
+brew install rumdl
+```
+
+#### Verification
+
+After installation, verify it's working:
+
+```bash
+rumdl --version
+```
+
+#### Usage
+
+Check markdown formatting:
+
+```bash
+cargo make markdown-fmt
+```
+
+Automatically fix markdown formatting:
+
+```bash
+cargo make markdown-fmt-fix
+```
+
+The markdown checks are automatically run as part of:
+
+- `cargo make check-all`
+- Pre-commit and pre-push hooks
+- CI pipeline
 
 ## Development Workflow
 

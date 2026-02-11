@@ -32,9 +32,19 @@ toolchain = "nightly"
 command = "cargo"
 args = ["udeps", "--all-targets"]
 
+[tasks.markdown-fmt]
+description = "Check markdown formatting with rumdl"
+command = "rumdl"
+args = ["check", "."]
+
+[tasks.markdown-fmt-fix]
+description = "Fix markdown formatting with rumdl"
+command = "rumdl"
+args = ["fmt", "."]
+
 [tasks.check-all]
-description = "Run all checks (format, clippy, test, unused dependencies)"
-dependencies = ["fmt", "clippy", "test", "check-unused-dependencies"]
+description = "Run all checks (format, clippy, test, unused dependencies, markdown)"
+dependencies = ["fmt", "clippy", "test", "check-unused-dependencies", "markdown-fmt"]
 
 [tasks.ci]
 description = "Run CI checks (same as check-all)"
