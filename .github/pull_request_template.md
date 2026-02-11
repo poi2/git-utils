@@ -18,7 +18,3 @@ None / (describe if any)
 ## Related Issues/PRs
 
 Closes #
-
----
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
