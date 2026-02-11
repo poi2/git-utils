@@ -105,14 +105,16 @@ pub fn delete_repo(
         return Ok(());
     }
 
-    // Final confirmation
-    let answer = Confirm::new(&format!("Delete repository '{}'?", relative_path))
-        .with_default(false)
-        .prompt()?;
+    // Final confirmation (skip if --force)
+    if !force {
+        let answer = Confirm::new(&format!("Delete repository '{}'?", relative_path))
+            .with_default(false)
+            .prompt()?;
 
-    if !answer {
-        println!("Cancelled");
-        return Ok(());
+        if !answer {
+            println!("Cancelled");
+            return Ok(());
+        }
     }
 
     // Delete the repository

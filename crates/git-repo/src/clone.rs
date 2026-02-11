@@ -1,6 +1,7 @@
 use anyhow::{anyhow, Result};
 use git2::{build::RepoBuilder, FetchOptions, Repository};
 use inquire::Select;
+use std::io::IsTerminal;
 use std::path::Path;
 use std::process::Command;
 
@@ -22,16 +23,22 @@ pub fn clone_repo(url: &str, shallow: bool, bare: bool, branch: Option<&str>) ->
         println!();
 
         let options = vec![
-            "Skip (do nothing)",
-            "Update (git pull)",
-            "Replace (rm -rf && clone)",
-            "Rename (clone as {repo}-2)",
+            "Skip (do nothing)".to_string(),
+            "Update (git pull)".to_string(),
+            "Replace (rm -rf && clone)".to_string(),
+            format!("Rename (clone as {}-2)", info.repo),
         ];
-        let selection = Select::new("Options:", options)
-            .with_help_message("Select what to do")
-            .prompt()?;
+        let selection = if std::io::stdin().is_terminal() {
+            Select::new("Options:", options)
+                .with_help_message("Select what to do")
+                .prompt()?
+        } else {
+            // Non-interactive mode: default to skip
+            println!("Non-interactive mode: skipping");
+            "Skip (do nothing)".to_string()
+        };
 
-        match selection {
+        match selection.as_str() {
             "Skip (do nothing)" => {
                 println!("Skipped");
                 return Ok(());
@@ -44,7 +51,7 @@ pub fn clone_repo(url: &str, shallow: bool, bare: bool, branch: Option<&str>) ->
                 std::fs::remove_dir_all(&target_path)?;
                 // Continue to clone
             }
-            "Rename (clone as {repo}-2)" => {
+            s if s.starts_with("Rename (clone as ") => {
                 return clone_with_renamed_dir(&url, shallow, bare, branch, &repo_root, &info);
             }
             _ => unreachable!(),

@@ -92,7 +92,11 @@ pub fn delete_branch(repo: &Repository, branch_name: &str, force: bool) -> Resul
 /// Check if a remote branch exists
 pub fn remote_branch_exists(repo: &Repository, branch_name: &str, remote: &str) -> Result<bool> {
     let remote_ref = format!("refs/remotes/{}/{}", remote, branch_name);
-    Ok(repo.find_reference(&remote_ref).is_ok())
+    match repo.find_reference(&remote_ref) {
+        Ok(_) => Ok(true),
+        Err(e) if e.code() == git2::ErrorCode::NotFound => Ok(false),
+        Err(e) => Err(e.into()),
+    }
 }
 
 /// Delete a remote branch
@@ -158,6 +162,24 @@ mod tests {
         // Skip if not in a git repo
         if let Ok(repo) = open_repo() {
             assert!(!repo.is_bare());
+        }
+    }
+
+    #[test]
+    fn test_remote_branch_exists() {
+        // This test requires a git repository with remotes
+        if let Ok(repo) = open_repo() {
+            // Test with a non-existent branch
+            let result = remote_branch_exists(&repo, "nonexistent-branch-12345", "origin");
+
+            // Should return Ok(false) for non-existent branch
+            // or Err if no remote exists
+            match result {
+                Ok(exists) => assert!(!exists, "Non-existent branch should not exist"),
+                Err(_) => {
+                    // It's okay if remote doesn't exist
+                }
+            }
         }
     }
 }
