@@ -1,10 +1,10 @@
 ## Summary
 
--
+<!-- Briefly summarize the changes in this PR. -->
 
 ## Changes
 
--
+<!-- List the key changes made in this PR. -->
 
 ## Test Plan
 
@@ -17,4 +17,4 @@ None / (describe if any)
 
 ## Related Issues/PRs
 
-Closes #
+None / (describe if any)
