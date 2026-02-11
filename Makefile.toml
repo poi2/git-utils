@@ -124,3 +124,68 @@ else
     echo "⚠️  Hooks directory not found"
 fi
 '''
+
+[tasks.install-all]
+description = "Install all binaries to local cargo bin"
+script = '''
+#!/bin/bash
+set -e
+
+echo "Installing all git-utils binaries..."
+echo ""
+
+# NOTE: Keep this list in sync with uninstall-all task
+BINARIES=(
+    "git-branch-switch"
+    "git-branch-delete"
+    "git-repo"
+    "git-pr-merged"
+    "git-utils"
+)
+
+for binary in "${BINARIES[@]}"; do
+    echo "📦 Installing $binary..."
+    cargo install --path "crates/$binary" --force --locked
+    echo ""
+done
+
+echo "✅ All binaries installed successfully!"
+echo ""
+echo "Installed binaries:"
+for binary in "${BINARIES[@]}"; do
+    echo "  - $binary"
+done
+echo ""
+echo "Binaries are available in: ${CARGO_HOME:-$HOME/.cargo}/bin"
+'''
+
+[tasks.uninstall-all]
+description = "Uninstall all binaries from local cargo bin"
+script = '''
+#!/bin/bash
+
+echo "Uninstalling all git-utils binaries..."
+echo ""
+
+# NOTE: Keep this list in sync with install-all task
+BINARIES=(
+    "git-branch-switch"
+    "git-branch-delete"
+    "git-repo"
+    "git-pr-merged"
+    "git-utils"
+)
+
+for binary in "${BINARIES[@]}"; do
+    echo "🗑️  Uninstalling $binary..."
+    if cargo uninstall "$binary" 2>&1 | grep -q "package .* is not installed"; then
+        echo "  ⚠️  $binary not found (may not be installed)"
+    elif [ ${PIPESTATUS[0]} -ne 0 ]; then
+        echo "  ❌ Failed to uninstall $binary"
+        exit 1
+    fi
+done
+
+echo ""
+echo "✅ Uninstall process completed!"
+'''
