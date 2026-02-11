@@ -1,0 +1,40 @@
+# Commitlint Configuration
+# Enforces Conventional Commits specification
+# See: https://www.conventionalcommits.org/
+
+[rules]
+# Type must be one of the specified values
+type-enum = [2, "always", [
+    "feat",     # New feature
+    "fix",      # Bug fix
+    "docs",     # Documentation changes
+    "style",    # Code style changes (formatting, etc.)
+    "refactor", # Code refactoring
+    "test",     # Adding or updating tests
+    "chore",    # Maintenance tasks
+    "ci",       # CI/CD changes
+    "build",    # Build system changes
+    "perf",     # Performance improvements
+    "revert"    # Revert a previous commit
+]]
+
+# Type must be lowercase
+type-case = [2, "always", "lower-case"]
+
+# Type cannot be empty
+type-empty = [2, "never"]
+
+# Subject cannot be empty
+subject-empty = [2, "never"]
+
+# Subject must not start with uppercase (enforces lowercase start)
+subject-case = [2, "never", ["upper-case"]]
+
+# Header (type + scope + subject) max length
+header-max-length = [2, "always", 72]
+
+# Body should have a blank line before it
+body-leading-blank = [1, "always"]
+
+# Footer should have a blank line before it
+footer-leading-blank = [1, "always"]

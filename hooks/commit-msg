@@ -1,0 +1,14 @@
+#!/bin/sh
+# Commitlint hook to enforce Conventional Commits
+# This hook is triggered before commit message is finalized
+
+# Check if commitlint is installed
+if ! command -v commitlint &> /dev/null; then
+    echo "Error: commitlint-rs is not installed"
+    echo "Please install it: cargo install commitlint-rs"
+    echo "See DEVELOPERS.md for more details"
+    exit 1
+fi
+
+# Run commitlint on the commit message
+commitlint --edit "$1"
