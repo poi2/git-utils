@@ -100,7 +100,7 @@ fn main() -> Result<()> {
     }
 
     let mut deleted_count = 0;
-    let mut failed_count = 0;
+    let mut skipped_count = 0;
 
     for branch in &branches_to_delete {
         match git::delete_branch(&repo, branch, cli.force) {
@@ -109,16 +109,16 @@ fn main() -> Result<()> {
                 deleted_count += 1;
             }
             Err(e) => {
-                eprintln!("Failed to delete branch '{}': {}", branch, e);
-                failed_count += 1;
+                eprintln!("Skipped local branch '{}': {}", branch, e);
+                skipped_count += 1;
             }
         }
     }
 
-    if failed_count > 0 {
+    if skipped_count > 0 {
         println!(
-            "\nDeleted {} local branches ({} failed)",
-            deleted_count, failed_count
+            "\nDeleted {} local branches ({} skipped)",
+            deleted_count, skipped_count
         );
     } else {
         println!("\nDeleted {} local branches", deleted_count);
