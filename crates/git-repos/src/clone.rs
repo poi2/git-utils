@@ -23,15 +23,16 @@ pub fn clone_repo(url: &str, shallow: bool, bare: bool, branch: Option<&str>) ->
 
     // Setup SSH authentication callbacks
     let mut callbacks = RemoteCallbacks::new();
-    callbacks.credentials(|_url, username_from_url, allowed_types| {
+    callbacks.credentials(|url, username_from_url, allowed_types| {
         if allowed_types.contains(git2::CredentialType::SSH_KEY) {
             Cred::ssh_key_from_agent(username_from_url.unwrap_or("git"))
         } else if allowed_types.contains(git2::CredentialType::USERNAME) {
             Cred::username(username_from_url.unwrap_or("git"))
         } else {
-            Err(git2::Error::from_str(
-                "No supported authentication methods available",
-            ))
+            Err(git2::Error::from_str(&format!(
+                "No supported authentication methods available for URL `{}` with username {:?}; allowed credential types: {:?}",
+                url, username_from_url, allowed_types
+            )))
         }
     });
 
