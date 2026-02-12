@@ -310,7 +310,10 @@ fn open_in_browser(repo_info: &str, pr_numbers: &[u32]) -> Result<()> {
     } else if cfg!(target_os = "linux") {
         ("xdg-open", vec![url.as_str()])
     } else if cfg!(target_os = "windows") {
-        ("cmd", vec!["/C", "start", url.as_str()])
+        (
+            "rundll32",
+            vec!["url.dll,FileProtocolHandler", url.as_str()],
+        )
     } else {
         eprintln!("Warning: Unsupported platform for auto-opening browser");
         println!("URL: {}", url);
@@ -322,12 +325,29 @@ fn open_in_browser(repo_info: &str, pr_numbers: &[u32]) -> Result<()> {
     match output {
         Ok(result) if result.status.success() => {
             println!("Opened in browser: {}", url);
+            Ok(())
         }
-        _ => {
-            eprintln!("Warning: Failed to open browser automatically");
+        Ok(result) => {
+            let stderr = String::from_utf8_lossy(&result.stderr);
+            eprintln!(
+                "Warning: Failed to open browser automatically (status: {}, stderr: {})",
+                result.status,
+                stderr.trim()
+            );
             println!("URL: {}", url);
+            Err(anyhow!(
+                "Browser command '{}' exited with status {}",
+                cmd,
+                result.status
+            ))
+        }
+        Err(e) => {
+            eprintln!(
+                "Warning: Failed to open browser automatically (error: {})",
+                e
+            );
+            println!("URL: {}", url);
+            Err(anyhow!("Failed to spawn browser command '{}': {}", cmd, e))
         }
     }
-
-    Ok(())
 }
