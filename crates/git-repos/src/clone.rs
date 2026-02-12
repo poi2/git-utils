@@ -1,5 +1,5 @@
 use anyhow::Result;
-use git2::{build::RepoBuilder, FetchOptions};
+use git2::{build::RepoBuilder, Cred, FetchOptions, RemoteCallbacks};
 
 use crate::utils::{convert_url_if_needed, get_repo_root, parse_repo_url};
 
@@ -21,14 +21,23 @@ pub fn clone_repo(url: &str, shallow: bool, bare: bool, branch: Option<&str>) ->
 
     println!("Cloning {} to {}...", url, target_path.display());
 
-    // Setup clone options
-    let mut builder = RepoBuilder::new();
+    // Setup SSH authentication callbacks
+    let mut callbacks = RemoteCallbacks::new();
+    callbacks.credentials(|_url, username_from_url, _allowed_types| {
+        Cred::ssh_key_from_agent(username_from_url.unwrap_or("git"))
+    });
+
+    // Setup fetch options with callbacks
+    let mut fetch_opts = FetchOptions::new();
+    fetch_opts.remote_callbacks(callbacks);
 
     if shallow {
-        let mut fetch_opts = FetchOptions::new();
         fetch_opts.depth(1);
-        builder.fetch_options(fetch_opts);
     }
+
+    // Setup clone options
+    let mut builder = RepoBuilder::new();
+    builder.fetch_options(fetch_opts);
 
     if bare {
         builder.bare(true);
