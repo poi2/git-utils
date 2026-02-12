@@ -293,26 +293,40 @@ fn print_markdown(output: &Output) {
 }
 
 fn open_in_browser(repo_info: &str, pr_numbers: &[u32]) -> Result<()> {
-    let base_url = format!("https://github.com/{}/pulls", repo_info);
+    // Build search query with URL-encoded # symbols
     let query = pr_numbers
         .iter()
-        .map(|n| format!("#{}", n))
+        .map(|n| format!("%23{}", n))
         .collect::<Vec<_>>()
-        .join(" ");
-    let url = format!("{}?q=is:pr+is:merged+{}", base_url, query);
+        .join("+");
+    let url = format!(
+        "https://github.com/{}/pulls?q=is:pr+is:merged+{}",
+        repo_info, query
+    );
 
-    // Use gh browse to open the URL
-    let output = Command::new("gh")
-        .args(["browse", "--repo", repo_info, &url])
-        .output()
-        .context("Failed to open browser")?;
-
-    if !output.status.success() {
-        let stderr = String::from_utf8_lossy(&output.stderr);
-        eprintln!("Warning: Failed to open browser: {}", stderr);
-        println!("URL: {}", url);
+    // Determine the appropriate command based on the platform
+    let (cmd, args) = if cfg!(target_os = "macos") {
+        ("open", vec![url.as_str()])
+    } else if cfg!(target_os = "linux") {
+        ("xdg-open", vec![url.as_str()])
+    } else if cfg!(target_os = "windows") {
+        ("cmd", vec!["/C", "start", url.as_str()])
     } else {
-        println!("Opened in browser: {}", url);
+        eprintln!("Warning: Unsupported platform for auto-opening browser");
+        println!("URL: {}", url);
+        return Ok(());
+    };
+
+    let output = Command::new(cmd).args(&args).output();
+
+    match output {
+        Ok(result) if result.status.success() => {
+            println!("Opened in browser: {}", url);
+        }
+        _ => {
+            eprintln!("Warning: Failed to open browser automatically");
+            println!("URL: {}", url);
+        }
     }
 
     Ok(())
