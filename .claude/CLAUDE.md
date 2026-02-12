@@ -24,6 +24,7 @@
 ### PR Creation Guidelines
 
 - **Title**: Concise and accurately describe the changes
+- **Description language**: Write in English for consistency and broader accessibility
 - **Use the PR template**: Fill out all sections in `.github/pull_request_template.md`
   - **Summary**: Overview of changes (bullet points)
   - **Changes**: Detailed explanations

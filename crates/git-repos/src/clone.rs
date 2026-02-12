@@ -1,5 +1,5 @@
 use anyhow::Result;
-use git2::{build::RepoBuilder, FetchOptions};
+use git2::{build::RepoBuilder, Cred, FetchOptions, RemoteCallbacks};
 
 use crate::utils::{convert_url_if_needed, get_repo_root, parse_repo_url};
 
@@ -21,14 +21,32 @@ pub fn clone_repo(url: &str, shallow: bool, bare: bool, branch: Option<&str>) ->
 
     println!("Cloning {} to {}...", url, target_path.display());
 
-    // Setup clone options
-    let mut builder = RepoBuilder::new();
+    // Setup SSH authentication callbacks
+    let mut callbacks = RemoteCallbacks::new();
+    callbacks.credentials(|url, username_from_url, allowed_types| {
+        if allowed_types.contains(git2::CredentialType::SSH_KEY) {
+            Cred::ssh_key_from_agent(username_from_url.unwrap_or("git"))
+        } else if allowed_types.contains(git2::CredentialType::USERNAME) {
+            Cred::username(username_from_url.unwrap_or("git"))
+        } else {
+            Err(git2::Error::from_str(&format!(
+                "No supported authentication methods available for URL `{}` with username {:?}; allowed credential types: {:?}",
+                url, username_from_url, allowed_types
+            )))
+        }
+    });
+
+    // Setup fetch options with callbacks
+    let mut fetch_opts = FetchOptions::new();
+    fetch_opts.remote_callbacks(callbacks);
 
     if shallow {
-        let mut fetch_opts = FetchOptions::new();
         fetch_opts.depth(1);
-        builder.fetch_options(fetch_opts);
     }
+
+    // Setup clone options
+    let mut builder = RepoBuilder::new();
+    builder.fetch_options(fetch_opts);
 
     if bare {
         builder.bare(true);
