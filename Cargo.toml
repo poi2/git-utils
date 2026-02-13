@@ -22,7 +22,7 @@ clap = { version = "4.5", features = ["derive"] }
 inquire = "0.7"
 
 # Git
-git2 = "0.19"
+git2 = "0.20"
 
 # Error handling
 anyhow = "1.0"
