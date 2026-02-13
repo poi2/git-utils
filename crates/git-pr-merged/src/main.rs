@@ -3,6 +3,7 @@ use clap::Parser;
 use git2::Repository;
 use serde::{Deserialize, Serialize};
 use std::process::Command;
+use url::form_urlencoded;
 
 #[derive(Parser)]
 #[command(name = "git-pr-merged")]
@@ -293,6 +294,9 @@ fn print_markdown(output: &Output) {
 }
 
 fn open_in_browser(repo_info: &str, pr_numbers: &[u32]) -> Result<()> {
+    // URL-encode the repository path to handle special characters
+    let encoded_repo = form_urlencoded::byte_serialize(repo_info.as_bytes()).collect::<String>();
+
     // Build search query with URL-encoded # symbols
     let query = pr_numbers
         .iter()
@@ -301,7 +305,7 @@ fn open_in_browser(repo_info: &str, pr_numbers: &[u32]) -> Result<()> {
         .join("+");
     let url = format!(
         "https://github.com/{}/pulls?q=is:pr+is:merged+{}",
-        repo_info, query
+        encoded_repo, query
     );
 
     // Determine the appropriate command based on the platform
@@ -325,7 +329,6 @@ fn open_in_browser(repo_info: &str, pr_numbers: &[u32]) -> Result<()> {
     match output {
         Ok(result) if result.status.success() => {
             println!("Opened in browser: {}", url);
-            Ok(())
         }
         Ok(result) => {
             let stderr = String::from_utf8_lossy(&result.stderr);
@@ -335,11 +338,6 @@ fn open_in_browser(repo_info: &str, pr_numbers: &[u32]) -> Result<()> {
                 stderr.trim()
             );
             println!("URL: {}", url);
-            Err(anyhow!(
-                "Browser command '{}' exited with status {}",
-                cmd,
-                result.status
-            ))
         }
         Err(e) => {
             eprintln!(
@@ -347,7 +345,8 @@ fn open_in_browser(repo_info: &str, pr_numbers: &[u32]) -> Result<()> {
                 e
             );
             println!("URL: {}", url);
-            Err(anyhow!("Failed to spawn browser command '{}': {}", cmd, e))
         }
     }
+
+    Ok(())
 }
