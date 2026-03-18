@@ -11,16 +11,16 @@ This document lists all third-party dependencies and their licenses used in this
 
 ## License Details
 
-### Apache License 2.0 {#Apache-2.0}
+<a id="Apache-2.0"></a>
+### Apache License 2.0
 
 Used by:
-
 - [utf8_iter 1.0.4](https://github.com/hsivonen/utf8_iter)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
 
                                  Apache License
                            Version 2.0, January 2004
@@ -230,10 +230,10 @@ Used by:
 
 ---
 
-### Apache License 2.0 {#Apache-2.0}
+<a id="Apache-2.0"></a>
+### Apache License 2.0
 
 Used by:
-
 - [windows-link 0.2.1](https://github.com/microsoft/windows-rs)
 - [windows-sys 0.48.0](https://github.com/microsoft/windows-rs)
 - [windows-sys 0.61.2](https://github.com/microsoft/windows-rs)
@@ -249,7 +249,7 @@ Used by:
 <details>
 <summary>License Text</summary>
 
-```text
+```
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -458,16 +458,16 @@ Used by:
 
 ---
 
-### Apache License 2.0 {#Apache-2.0}
+<a id="Apache-2.0"></a>
+### Apache License 2.0
 
 Used by:
-
 - [winapi 0.3.9](https://github.com/retep998/winapi-rs)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -676,10 +676,10 @@ Used by:
 
 ---
 
-### Apache License 2.0 {#Apache-2.0}
+<a id="Apache-2.0"></a>
+### Apache License 2.0
 
 Used by:
-
 - [anstream 0.6.21](https://github.com/rust-cli/anstyle.git)
 - [anstyle-parse 0.2.7](https://github.com/rust-cli/anstyle.git)
 - [anstyle-query 1.1.5](https://github.com/rust-cli/anstyle.git)
@@ -696,7 +696,7 @@ Used by:
 <details>
 <summary>License Text</summary>
 
-```text
+```
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -906,10 +906,10 @@ Used by:
 
 ---
 
-### Apache License 2.0 {#Apache-2.0}
+<a id="Apache-2.0"></a>
+### Apache License 2.0
 
 Used by:
-
 - [bitflags 1.3.2](https://github.com/bitflags/bitflags)
 - [bitflags 2.10.0](https://github.com/bitflags/bitflags)
 - [cc 1.2.55](https://github.com/rust-lang/cc-rs)
@@ -954,7 +954,7 @@ Used by:
 <details>
 <summary>License Text</summary>
 
-```text
+```
                               Apache License
                         Version 2.0, January 2004
                      http://www.apache.org/licenses/
@@ -1163,17 +1163,17 @@ limitations under the License.
 
 ---
 
-### Apache License 2.0 {#Apache-2.0}
+<a id="Apache-2.0"></a>
+### Apache License 2.0
 
 Used by:
-
 - [getrandom 0.2.17](https://github.com/rust-random/getrandom)
 - [getrandom 0.3.4](https://github.com/rust-random/getrandom)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
                               Apache License
                         Version 2.0, January 2004
                      https://www.apache.org/licenses/
@@ -1382,16 +1382,16 @@ limitations under the License.
 
 ---
 
-### Apache License 2.0 {#Apache-2.0}
+<a id="Apache-2.0"></a>
+### Apache License 2.0
 
 Used by:
-
 - [vcpkg 0.2.15](https://github.com/mcgoo/vcpkg-rs)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
                               Apache License
                         Version 2.0, January 2004
                      http://www.apache.org/licenses/
@@ -1601,10 +1601,10 @@ limitations under the License.
 
 ---
 
-### Apache License 2.0 {#Apache-2.0}
+<a id="Apache-2.0"></a>
+### Apache License 2.0
 
 Used by:
-
 - [anyhow 1.0.101](https://github.com/dtolnay/anyhow)
 - [dirs-sys 0.4.1](https://github.com/dirs-dev/dirs-sys-rs)
 - [dirs-sys 0.5.0](https://github.com/dirs-dev/dirs-sys-rs)
@@ -1636,7 +1636,7 @@ Used by:
 <details>
 <summary>License Text</summary>
 
-```text
+```
 Apache License
 Version 2.0, January 2004
 http://www.apache.org/licenses/
@@ -1717,16 +1717,16 @@ limitations under the License.
 
 ---
 
-### MIT License {#MIT}
+<a id="MIT"></a>
+### MIT License
 
 Used by:
-
 - [openssl-sys 0.9.111](https://github.com/rust-openssl/rust-openssl)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
 Copyright (c) 2014 Alex Crichton
 
 Permission is hereby granted, free of charge, to any
@@ -1759,16 +1759,16 @@ DEALINGS IN THE SOFTWARE.
 
 ---
 
-### MIT License {#MIT}
+<a id="MIT"></a>
+### MIT License
 
 Used by:
-
 - [mio 0.8.11](https://github.com/tokio-rs/mio)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
 Copyright (c) 2014 Carl Lerche and other MIO contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1795,16 +1795,16 @@ THE SOFTWARE.
 
 ---
 
-### MIT License {#MIT}
+<a id="MIT"></a>
+### MIT License
 
 Used by:
-
 - [redox_syscall 0.5.18](https://gitlab.redox-os.org/redox-os/syscall)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
 Copyright (c) 2017 Redox OS Developers
 
 MIT License
@@ -1834,16 +1834,16 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 
-### MIT License {#MIT}
+<a id="MIT"></a>
+### MIT License
 
 Used by:
-
 - [synstructure 0.13.2](https://github.com/mystor/synstructure)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
 Copyright 2016 Nika Layzell
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -1858,16 +1858,16 @@ THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRES
 
 ---
 
-### MIT License {#MIT}
+<a id="MIT"></a>
+### MIT License
 
 Used by:
-
 - [libredox 0.1.12](https://gitlab.redox-os.org/redox-os/libredox.git)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
 MIT License
 
 Copyright (c) 2023 4lDO2
@@ -1896,10 +1896,10 @@ SOFTWARE.
 
 ---
 
-### MIT License {#MIT}
+<a id="MIT"></a>
+### MIT License
 
 Used by:
-
 - [git-branch-delete 0.1.0](https://github.com/poi2/git-utils)
 - [git-branch-switch 0.1.0](https://github.com/poi2/git-utils)
 - [git-pr-merged 0.1.0](https://github.com/poi2/git-utils)
@@ -1912,7 +1912,7 @@ Used by:
 <details>
 <summary>License Text</summary>
 
-```text
+```
 MIT License
 
 Copyright (c) &lt;year&gt; &lt;copyright holders&gt;
@@ -1938,17 +1938,17 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ---
 
-### MIT License {#MIT}
+<a id="MIT"></a>
+### MIT License
 
 Used by:
-
 - [crossterm 0.25.0](https://github.com/crossterm-rs/crossterm)
 - [crossterm_winapi 0.9.1](https://github.com/crossterm-rs/crossterm-winapi)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
 MIT License
 
 Copyright (c) 2019 Timon
@@ -1977,16 +1977,16 @@ SOFTWARE.
 
 ---
 
-### MIT License {#MIT}
+<a id="MIT"></a>
+### MIT License
 
 Used by:
-
 - [zmij 1.0.20](https://github.com/dtolnay/zmij)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
 Permission is hereby granted, free of charge, to any
 person obtaining a copy of this software and associated
 documentation files (the &quot;Software&quot;), to deal in the
@@ -2017,10 +2017,10 @@ DEALINGS IN THE SOFTWARE.
 
 ---
 
-### MIT License {#MIT}
+<a id="MIT"></a>
+### MIT License
 
 Used by:
-
 - [aho-corasick 1.1.4](https://github.com/BurntSushi/aho-corasick)
 - [byteorder 1.5.0](https://github.com/BurntSushi/byteorder)
 - [memchr 2.8.0](https://github.com/BurntSushi/memchr)
@@ -2028,7 +2028,7 @@ Used by:
 <details>
 <summary>License Text</summary>
 
-```text
+```
 The MIT License (MIT)
 
 Copyright (c) 2015 Andrew Gallant
@@ -2057,16 +2057,16 @@ THE SOFTWARE.
 
 ---
 
-### MIT License {#MIT}
+<a id="MIT"></a>
+### MIT License
 
 Used by:
-
 - [strsim 0.11.1](https://github.com/rapidfuzz/strsim-rs)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
 The MIT License (MIT)
 
 Copyright (c) 2015 Danny Guo
@@ -2097,17 +2097,17 @@ SOFTWARE.
 
 ---
 
-### MIT License {#MIT}
+<a id="MIT"></a>
+### MIT License
 
 Used by:
-
 - [redox_users 0.4.6](https://gitlab.redox-os.org/redox-os/users)
 - [redox_users 0.5.2](https://gitlab.redox-os.org/redox-os/users)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
 The MIT License (MIT)
 
 Copyright (c) 2017 Jose Narvaez
@@ -2137,16 +2137,16 @@ SOFTWARE.
 
 ---
 
-### MIT License {#MIT}
+<a id="MIT"></a>
+### MIT License
 
 Used by:
-
 - [fuzzy-matcher 0.3.7](https://github.com/lotabout/fuzzy-matcher)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
 The MIT License (MIT)
 
 Copyright (c) 2019 Jinzhou Zhang
@@ -2175,16 +2175,16 @@ SOFTWARE.
 
 ---
 
-### Mozilla Public License 2.0 {#MPL-2.0}
+<a id="MPL-2.0"></a>
+### Mozilla Public License 2.0
 
 Used by:
-
 - [option-ext 0.2.0](https://github.com/soc/option-ext.git)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
 Mozilla Public License Version 2.0
 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
 
@@ -2565,16 +2565,16 @@ Exhibit B - &quot;Incompatible With Secondary Licenses&quot; Notice
 
 ---
 
-### Unicode License v3 {#Unicode-3.0}
+<a id="Unicode-3.0"></a>
+### Unicode License v3
 
 Used by:
-
 - [unicode-ident 1.0.23](https://github.com/dtolnay/unicode-ident)
 
 <details>
 <summary>License Text</summary>
 
-```text
+```
 UNICODE LICENSE V3
 
 COPYRIGHT AND PERMISSION NOTICE
@@ -2621,10 +2621,10 @@ authorization of the copyright holder.
 
 ---
 
-### Unicode License v3 {#Unicode-3.0}
+<a id="Unicode-3.0"></a>
+### Unicode License v3
 
 Used by:
-
 - [icu_collections 2.1.1](https://github.com/unicode-org/icu4x)
 - [icu_locale_core 2.1.1](https://github.com/unicode-org/icu4x)
 - [icu_normalizer 2.1.1](https://github.com/unicode-org/icu4x)
@@ -2647,7 +2647,7 @@ Used by:
 <details>
 <summary>License Text</summary>
 
-```text
+```
 UNICODE LICENSE V3
 
 COPYRIGHT AND PERMISSION NOTICE
@@ -2700,3 +2700,5 @@ ICU 1.8.1 to ICU 57.1 © 1995-2016 International Business Machines Corporation a
 </details>
 
 ---
+
+
