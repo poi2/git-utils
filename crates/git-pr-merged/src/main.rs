@@ -3,7 +3,6 @@ use clap::Parser;
 use git2::Repository;
 use serde::{Deserialize, Serialize};
 use std::process::Command;
-use url::form_urlencoded;
 
 #[derive(Parser)]
 #[command(name = "git-pr-merged")]
@@ -294,10 +293,6 @@ fn print_markdown(output: &Output) {
 }
 
 fn open_in_browser(repo_info: &str, pr_numbers: &[u32]) -> Result<()> {
-    // URL-encode the repository path to handle special characters
-    let encoded_repo = form_urlencoded::byte_serialize(repo_info.as_bytes()).collect::<String>();
-
-    // Build search query with URL-encoded # symbols
     let query = pr_numbers
         .iter()
         .map(|n| format!("%23{}", n))
@@ -305,7 +300,7 @@ fn open_in_browser(repo_info: &str, pr_numbers: &[u32]) -> Result<()> {
         .join("+");
     let url = format!(
         "https://github.com/{}/pulls?q=is:pr+is:merged+{}",
-        encoded_repo, query
+        repo_info, query
     );
 
     // Determine the appropriate command based on the platform
