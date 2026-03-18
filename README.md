@@ -12,6 +12,29 @@ Git utilities for managing repositories and branches interactively.
 
 ## Installation
 
+### Prerequisites
+
+This project uses static linking for all dependencies, so you **do not need** to install libgit2 or other system libraries at runtime.
+
+However, for **building from source**, you need:
+
+- Rust toolchain (stable)
+- CMake (for building vendored libgit2)
+- C/C++ compiler (gcc, clang, or MSVC)
+- pkg-config (on Unix-like systems)
+
+On macOS:
+
+```bash
+brew install cmake pkg-config
+```
+
+On Ubuntu/Debian:
+
+```bash
+apt-get install cmake pkg-config build-essential
+```
+
 ### From source
 
 ```bash
@@ -247,3 +270,5 @@ git push --no-verify
 ## License
 
 MIT
+
+This software statically links third-party libraries. See [THIRD-PARTY-LICENSES.md](THIRD-PARTY-LICENSES.md) for the complete list of dependencies and their licenses.
